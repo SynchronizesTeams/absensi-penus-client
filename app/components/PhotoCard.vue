@@ -19,6 +19,7 @@
           <Icon name="lucide:camera" class="w-12 h-12 text-gray-400 mx-auto" />
           <p class="text-sm text-gray-500">Belum ada foto</p>
         </div>
+        <input id="fileInput" type="file" accept="image/*" capture="user" />
       </div>
 
       <button
@@ -56,7 +57,8 @@ const emit = defineEmits<{
   "file-change": [file: File];
 }>();
 
-const fileInputRef = ref<HTMLInputElement>();
+// const fileInputRef = ref<HTMLInputElement>();
+const fileInput = document.getElementById("fileInput")
 
 const handleCameraClick = () => {
   emit("capture-photo");
@@ -72,7 +74,7 @@ const handleFileChange = (event: Event) => {
 
 onMounted(() => {
   const handleTriggerCamera = () => {
-    fileInputRef.value?.click();
+    fileInput?.click()
   };
 
   document.addEventListener("trigger-camera", handleTriggerCamera);
