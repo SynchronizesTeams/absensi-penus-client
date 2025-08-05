@@ -24,10 +24,6 @@
 const success = ref(false);
 const currentTime = ref(new Date());
 
-definePageMeta({
-  middleware: ['auth']
-})
-
 onMounted(() => {
   const timer = setInterval(() => {
     currentTime.value = new Date();
