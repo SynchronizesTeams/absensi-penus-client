@@ -16,16 +16,16 @@
       <PhotoCard
         :photo="photo"
         :is-capturing="isCapturing"
-        @capture-photo="$emit('capture-photo')"
-        @retake-photo="$emit('retake-photo')"
-        @file-change="$emit('file-change', $event)" />
+        @capture-photo="handleCameraCapture"
+        @retake-photo="() => setPhoto(null)"
+        @file-change="handleFileChange" />
 
       <LocationStatus v-if="location" :location="location" />
 
       <SubmitButton
         v-if="photo && location"
         :is-submitting="isSubmitting"
-        @submit="$emit('submit-attendance')" />
+        @submit="handleSubmitAttendance" />
     </div>
   </div>
 </template>
@@ -37,22 +37,118 @@ interface LocationData {
   accuracy: number;
 }
 
-interface Props {
-  photo: string | null;
-  location: LocationData | null;
-  error: string | null;
-  isCapturing: boolean;
-  isSubmitting: boolean;
-}
+const photo = ref<string | null>(null);
+const location = ref<LocationData | null>(null);
+const isCapturing = ref(false);
+const isSubmitting = ref(false);
+const error = ref<string | null>(null);
+const success = ref(false);
 
-defineProps<Props>();
+const emit = defineEmits(['success'])
 
-defineEmits<{
-  "capture-photo": [];
-  "retake-photo": [];
-  "file-change": [file: File];
-  "submit-attendance": [];
-}>();
+const getCurrentLocation = (): Promise<LocationData> => {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error("Geolocation tidak didukung oleh browser ini"));
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+        });
+      },
+      (error) => {
+        let errorMessage = "Gagal mendapatkan lokasi";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "Akses lokasi ditolak. Mohon izinkan akses lokasi.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Informasi lokasi tidak tersedia.";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "Waktu permintaan lokasi habis.";
+            break;
+        }
+        reject(new Error(errorMessage));
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000,
+      }
+    );
+  });
+};
+
+const handleCameraCapture = async () => {
+  isCapturing.value = true;
+  error.value = null;
+
+  try {
+    const locationData = await getCurrentLocation();
+    location.value = locationData;
+
+    const event = new Event("trigger-camera");
+    document.dispatchEvent(event);
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : "Terjadi kesalahan";
+    isCapturing.value = false;
+  }
+};
+
+const handleFileChange = (file: File) => {
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      photo.value = e.target?.result as string;
+      isCapturing.value = false;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    isCapturing.value = false;
+  }
+};
+
+
+const handleSubmitAttendance = async () => {
+  if (!photo.value || !location.value) {
+    error.value = "Foto dan lokasi diperlukan untuk absen";
+    return;
+  }
+
+  isSubmitting.value = true;
+  error.value = null;
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    emit("success")
+
+    setTimeout(() => {
+      resetForm();
+    }, 3000);
+  } catch (err) {
+    error.value = "Gagal mengirim data absen. Silakan coba lagi.";
+  } finally {
+    isSubmitting.value = false;
+  }
+};
+
+const resetForm = () => {
+  photo.value = null;
+  location.value = null;
+  error.value = null;
+  success.value = false;
+};
+
+const setPhoto = (value: string | null) => {
+  photo.value = value;
+};
 </script>
 
 <style></style>
