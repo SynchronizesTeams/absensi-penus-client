@@ -31,8 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAbsen } from "~/composables/useAbsen";
-
 const {
   photo,
   location,
@@ -53,9 +51,6 @@ const handleCameraCapture = async () => {
   try {
     const locationData = await getCurrentLocation();
     location.value = locationData;
-
-    const event = new Event("trigger-camera");
-    document.dispatchEvent(event);
   } catch (err) {
     error.value = err instanceof Error ? err.message : "Terjadi kesalahan";
     isCapturing.value = false;

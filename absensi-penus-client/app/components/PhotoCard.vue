@@ -1,3 +1,4 @@
+// filepath: /home/kurnias/Documents/Projects/Sekolah/Devaccto/absensi-penus-client/app/components/PhotoCard.vue
 <template>
   <div>
     <div v-if="photo" class="space-y-3">
@@ -60,10 +61,6 @@ const fileInputRef = ref<HTMLInputElement>();
 
 const handleCameraClick = () => {
   emit("capture-photo");
-  const input = document.getElementById(
-    "cameraInput"
-  ) as HTMLInputElement | null;
-  input?.click();
 };
 
 const handleFileChange = (event: Event) => {
@@ -73,6 +70,21 @@ const handleFileChange = (event: Event) => {
     emit("file-change", file);
   }
 };
+
+onMounted(() => {
+  const handleTriggerCamera = () => {
+    const input = document.getElementById(
+      "cameraInput"
+    ) as HTMLInputElement | null;
+    input?.click();
+  };
+
+  document.addEventListener("trigger-camera", handleTriggerCamera);
+
+  onUnmounted(() => {
+    document.removeEventListener("trigger-camera", handleTriggerCamera);
+  });
+});
 </script>
 
 <style></style>
