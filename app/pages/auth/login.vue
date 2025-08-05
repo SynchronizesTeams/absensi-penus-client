@@ -32,11 +32,17 @@ const no_induk = ref('')
 const password = ref('')
 const config = useRuntimeConfig()
 
+interface LoginResponse {
+  token: string;
+  user: object;
+  message?: string;
+}
+
 console.log('API URL:', config.public.apiUrl);
 
 const handleLogin = async () => {
   try {
-    const response = await fetch(`${config.public.apiUrl}/auth/login`, {
+    const data: LoginResponse = await $fetch(`${config.public.apiUrl}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -47,13 +53,11 @@ const handleLogin = async () => {
       })
     })
 
-    const data = await response.json()
-
-    if (response.ok) {
-      localStorage.setItem('auth_token', data.token)
+    if (data && data.token) {
+      useCookie('token').value = data.token
       navigateTo('/')
     } else {
-      console.error('Login gagal:', data.message)
+      console.error('Login gagal:', data?.message || 'Unknown error')
     }
   } catch (error) {
     console.error('Error:', error)

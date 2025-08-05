@@ -29,7 +29,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiUrl: "https://api-absensi.synchronizeteams.my.id/"
+      apiUrl: "https://backend-absensi.synchronizeteams.my.id/api"
     }
   },
 
