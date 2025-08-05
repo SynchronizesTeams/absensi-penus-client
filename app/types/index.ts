@@ -1,7 +1,7 @@
 export interface LocationData {
   latitude: number
   longitude: number
-  accuracy: number
+  accuracy?: number
 }
 
 export interface AttendanceData {

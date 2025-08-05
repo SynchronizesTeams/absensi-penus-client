@@ -39,8 +39,15 @@ const {
   error,
   success,
   getCurrentLocation,
+  submitAttendance,
   resetForm,
 } = useAbsen();
+
+const AttendanceData = ref({
+  photo: null as string | null,
+  location: null as { latitude: number; longitude: number } | null,
+  timestamp: new Date(),
+});
 
 const emit = defineEmits(["success"]);
 
@@ -78,9 +85,11 @@ const handleSubmitAttendance = async () => {
 
   isSubmitting.value = true;
   error.value = null;
-
   try {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    AttendanceData.value.photo = photo.value;
+    AttendanceData.value.location = location.value;
+    AttendanceData.value.timestamp = new Date();
+    await submitAttendance(AttendanceData.value);
     emit("success");
     setTimeout(() => {
       resetForm();
