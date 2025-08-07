@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-blue-50"></div>
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50"></div>
 </template>
 
 <script lang="ts" setup>
