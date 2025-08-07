@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- Photo Preview State -->
     <div v-if="photo" class="space-y-4">
       <div
         class="relative aspect-square rounded-2xl overflow-hidden bg-gray-50 shadow-md">
@@ -29,8 +28,8 @@
         <div class="text-center space-y-4 p-8">
           <div class="relative">
             <div
-              class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto shadow-lg transform hover:scale-105 transition-transform duration-200">
-              <Icon name="lucide:camera" class="w-10 h-10 text-white" />
+              class="w-20 h-20 border-gray-300 border-dashed border-2 rounded-full flex items-center justify-center mx-auto">
+              <Icon name="lucide:camera" class="w-10 h-10 text-gray-300" />
             </div>
           </div>
           <div class="space-y-2">
