@@ -5,7 +5,7 @@ export interface LocationData {
 }
 
 export interface AttendanceData {
-  photo: string | null
+  photo: File | null
   location: LocationData | null
   timestamp: Date
 }

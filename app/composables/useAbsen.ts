@@ -1,7 +1,7 @@
 import type { AttendanceData, LocationData } from "~/types";
 
 export const useAbsen = () => {
-  const photo = ref<string | null>(null);
+  const photo = ref<File | null>(null);
   const location = ref<LocationData | null>(null);
   const isCapturing = ref(false);
   const isSubmitting = ref(false);
@@ -51,19 +51,40 @@ export const useAbsen = () => {
 
   const submitAttendance = async (attendanceData: AttendanceData) => {
     try {
+      if (!attendanceData.photo) {
+        throw new Error("Foto absensi tidak tersedia.");
+      }
+      const formData = new FormData();
+      formData.append("photo_masuk", attendanceData.photo);
+      formData.append(
+        "latitude",
+        String(attendanceData.location?.latitude ?? "")
+      );
+      formData.append(
+        "longitude",
+        String(attendanceData.location?.longitude ?? "")
+      );
+
       const data = await $fetch(`${config.public.apiUrl}/absen/masuk`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${useCookie("token").value}`,
+          Accept: "application/json",
         },
-        body: JSON.stringify({
-          photo_masuk: attendanceData.photo,
-          latitude: attendanceData.location?.latitude,
-          longtitude: attendanceData.location?.longitude,
-        }),
+        body: formData,
       });
-    } catch (error) {
-      console.error("Error:", error);
+      return data;
+    } catch (error: any) {
+      let errorMsg = "Gagal mengirim data absensi.";
+      if (error?.response?._data?.message) {
+        errorMsg = error.response._data.message;
+      } else if (error?.data?.message) {
+        errorMsg = error.data.message;
+      } else if (error?.message) {
+        errorMsg = error.message;
+      }
+      console.log("Error submitting attendance:", errorMsg);
+      throw new Error(errorMsg);
     }
   };
 

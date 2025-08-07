@@ -1,18 +1,16 @@
 <template>
-  <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-    <div class="p-6 pb-4">
-      <h2 class="text-lg font-semibold text-center text-gray-900 mb-4">
+  <div
+    class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+    <div class="p-8 pb-6">
+      <h2 class="text-2xl font-medium text-center text-gray-800 mb-2">
         Ambil Foto untuk Absen
       </h2>
+      <p class="text-center text-gray-600 text-sm">
+        Pastikan wajah Anda terlihat jelas dalam foto
+      </p>
     </div>
-    <div class="px-6 pb-6 space-y-4">
-      <div v-if="error" class="bg-red-50 border border-red-200 rounded-lg p-3">
-        <div class="flex items-center space-x-2">
-          <Icon name="lucide:alert-circle" class="h-4 w-4 text-red-600" />
-          <span class="text-sm text-red-800">{{ error }}</span>
-        </div>
-      </div>
 
+    <div class="px-8 pb-8 space-y-6">
       <PhotoCard
         :photo="photo"
         :is-capturing="isCapturing"
@@ -44,20 +42,18 @@ const {
 } = useAbsen();
 
 const AttendanceData = ref({
-  photo: null as string | null,
+  photo: null as File | null,
   location: null as { latitude: number; longitude: number } | null,
   timestamp: new Date(),
 });
 
-const emit = defineEmits(["success"]);
+const emit = defineEmits(["success", "error"]);
 
 const handleCameraCapture = async () => {
-  isCapturing.value = true;
-  error.value = null;
-
   try {
     const locationData = await getCurrentLocation();
     location.value = locationData;
+    isCapturing.value = true;
   } catch (err) {
     error.value = err instanceof Error ? err.message : "Terjadi kesalahan";
     isCapturing.value = false;
@@ -66,13 +62,7 @@ const handleCameraCapture = async () => {
 
 const handleFileChange = (file: File) => {
   if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      photo.value = e.target?.result as string;
-      isCapturing.value = false;
-    };
-    reader.readAsDataURL(file);
-  } else {
+    photo.value = file;
     isCapturing.value = false;
   }
 };
@@ -80,30 +70,41 @@ const handleFileChange = (file: File) => {
 const handleSubmitAttendance = async () => {
   if (!photo.value || !location.value) {
     error.value = "Foto dan lokasi diperlukan untuk absen";
+    emit("error", error.value);
     return;
   }
 
   isSubmitting.value = true;
   error.value = null;
+
   try {
     AttendanceData.value.photo = photo.value;
     AttendanceData.value.location = location.value;
-    AttendanceData.value.timestamp = new Date();
     await submitAttendance(AttendanceData.value);
     emit("success");
     setTimeout(() => {
       resetForm();
     }, 3000);
   } catch (err) {
-    error.value = "Gagal mengirim data absen. Silakan coba lagi.";
+    error.value = err instanceof Error ? err.message : "Terjadi kesalahan, silahkan coba lagi nanti";
+    emit("error", error.value);
   } finally {
     isSubmitting.value = false;
   }
 };
 
-const setPhoto = (value: string | null) => {
+const setPhoto = (value: File | null) => {
   photo.value = value;
 };
 </script>
 
-<style></style>
+<style scoped>
+.shadow-lg {
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+</style>

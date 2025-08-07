@@ -1,18 +1,17 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-    <AbsenSucsess
-      v-if="success"
+    <AbsenStatus
+      v-if="showStatus"
+      :status="status"
+      :message="statusMessage"
       :current-time="currentTime"
       @reset="resetForm" />
 
     <template v-else>
       <Header />
-
       <div class="p-4 space-y-4">
         <TimeCard :current-time="currentTime" />
-
-        <AbsenCard @success="handleSuccess" />
-
+        <AbsenCard @success="handleSuccess" @error="handleError" />
         <InfoCard />
       </div>
     </template>
@@ -20,8 +19,9 @@
 </template>
 
 <script setup lang="ts">
-
-const success = ref(false);
+const showStatus = ref(false);
+const status = ref<"success" | "error">("success");
+const statusMessage = ref("");
 const currentTime = ref(new Date());
 
 onMounted(() => {
@@ -34,15 +34,22 @@ onMounted(() => {
   });
 });
 
-const handleSuccess = () => {
-  success.value = true;
-
+const handleSuccess = (msg = "") => {
+  status.value = "success";
+  statusMessage.value = msg || "Data absen Anda telah berhasil dikirim pada";
+  showStatus.value = true;
   setTimeout(() => {
-    success.value = false;
+    showStatus.value = false;
   }, 3000);
 };
 
+const handleError = (msg = "") => {
+  status.value = "error";
+  statusMessage.value = msg || "Data absen gagal dikirim. Silakan coba lagi.";
+  showStatus.value = true;
+};
+
 const resetForm = () => {
-  success.value = false;
+  showStatus.value = false;
 };
 </script>

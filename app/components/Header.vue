@@ -3,7 +3,7 @@
     <div class="px-4 py-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-2">
-          <Icon name="lucide:user" class="w-6 h-6 text-blue-600" />
+          <SideBar />
           <h1 class="text-xl font-bold text-gray-900">Sistem Absen</h1>
         </div>
         <span
