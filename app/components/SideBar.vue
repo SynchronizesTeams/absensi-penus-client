@@ -22,7 +22,7 @@
         <div class="flex items-center space-x-3">
           <div
             class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-            <Icon name="lucide:user" class="w-5 h-5 text-white" />
+            <Icon name="lucide:calendar-check" class="w-5 h-5 text-white" />
           </div>
           <h2 class="text-xl font-medium text-gray-800">Absen Pro MAX</h2>
         </div>
@@ -40,24 +40,24 @@
             to="/"
             class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group">
             <div
-              class="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors duration-200">
+              class="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors duration-200">
               <Icon
                 name="lucide:layout-dashboard"
-                class="w-5 h-5 text-blue-600 group-hover:text-blue-700" />
+                class="w-5 h-5 text-gray-600 group-hover:text-blue-700" />
             </div>
             <span class="ml-3 font-medium">Beranda</span>
           </NuxtLink>
 
           <NuxtLink
-            to="/settings"
+            to="/absen"
             class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group">
             <div
               class="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors duration-200">
               <Icon
-                name="lucide:settings"
+                name="lucide:calendar"
                 class="w-5 h-5 text-gray-600 group-hover:text-blue-700" />
             </div>
-            <span class="ml-3 font-medium">Pengaturan</span>
+            <span class="ml-3 font-medium">Absen</span>
           </NuxtLink>
 
           <NuxtLink
@@ -71,6 +71,18 @@
             </div>
             <span class="ml-3 font-medium">Pengaturan</span>
           </NuxtLink>
+
+          <button
+            @click="logout"
+            class="flex items-center px-4 py-3 w-full cursor-pointer text-red-700 rounded-xl hover:bg-red-50 hover:text-red-700 transition-all duration-200 group">
+            <div
+              class="flex items-center justify-center w-10 h-10 rounded-lg bg-red-100 group-hover:bg-red-100 transition-colors duration-200">
+              <Icon
+                name="lucide:log-out"
+                class="w-5 h-5 text-red-600 group-hover:text-red-700" />
+            </div>
+            <span class="ml-3 font-medium">Keluar</span>
+          </button>
         </nav>
       </div>
     </aside>
@@ -79,6 +91,11 @@
 
 <script setup lang="ts">
 const isOpen = ref(false);
+
+const logout = () => {
+  useCookie("token").value = "";
+  navigateTo("/auth/login");
+};
 </script>
 
 <style scoped>

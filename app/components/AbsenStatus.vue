@@ -1,8 +1,8 @@
 <template>
   <div
-    :class="['min-h-screen  flex items-center justify-center p-4', status === 'success' ? 'bg-green-100' : 'bg-red-100']">
+    :class="['min-h-screen flex items-center justify-center p-4', status === 'success' ? 'bg-green-100' : 'bg-red-100']">
     <div
-      class="w-full max-w-md bg-white rounded-lg shadow-sm border border-gray-200">
+      class="w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-100">
       <div class="p-6">
         <div class="text-center space-y-4">
           <Icon
