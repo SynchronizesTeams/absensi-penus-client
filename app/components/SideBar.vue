@@ -95,6 +95,7 @@ const isOpen = ref(false);
 const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
+  navigateTo("/auth/login")
 };
 </script>
 
