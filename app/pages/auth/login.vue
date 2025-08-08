@@ -3,30 +3,17 @@
     class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col">
     <div class="flex-grow flex items-center justify-center px-4 py-12">
       <div class="max-w-md w-full">
-        <!-- Login Card -->
         <div
           class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          <!-- Header Section -->
           <div
             class="bg-gradient-to-r from-blue-500 to-blue-600 p-8 text-center">
-            <div
-              class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
-              <Icon name="lucide:user-check" class="w-10 h-10 text-white" />
-            </div>
-            <h1 class="text-2xl font-bold text-white mb-2">Absen Pro MAX</h1>
-            <p class="text-blue-100 text-sm">Sistem Absensi Modern</p>
+            <h1 class="text-2xl font-bold text-white mb-2">Selamat Datang</h1>
+            <p class="text-blue-100 text-sm">
+              Masuk ke akun Anda untuk melanjutkan
+            </p>
           </div>
 
-          <!-- Form Section -->
           <div class="p-8">
-            <div class="text-center mb-8">
-              <h2 class="text-2xl font-semibold text-gray-800 mb-2">
-                Selamat Datang
-              </h2>
-              <p class="text-gray-600">Masuk ke akun Anda untuk melanjutkan</p>
-            </div>
-
-            <!-- Error Message -->
             <div
               v-if="error"
               class="bg-red-50 border-l-4 border-red-400 rounded-r-lg p-4 mb-6 shadow-sm">
@@ -40,7 +27,6 @@
               </div>
             </div>
 
-            <!-- Success Message -->
             <div
               v-if="success"
               class="bg-green-50 border-l-4 border-green-400 rounded-r-lg p-4 mb-6 shadow-sm">
@@ -55,12 +41,11 @@
             </div>
 
             <form @submit.prevent="handleLogin" class="space-y-6">
-              <!-- NIG Input -->
               <div class="space-y-2">
                 <label
                   for="no_induk"
                   class="block text-gray-700 text-sm font-semibold">
-                  Nomor Induk Guru (NIG)
+                  Nomor Induk
                 </label>
                 <div class="relative">
                   <div
@@ -77,7 +62,6 @@
                 </div>
               </div>
 
-              <!-- Password Input -->
               <div class="space-y-2">
                 <label
                   for="password"
@@ -107,7 +91,6 @@
                 </div>
               </div>
 
-              <!-- Remember Me & Forgot Password -->
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
                   <input
@@ -119,14 +102,8 @@
                     Ingat saya
                   </label>
                 </div>
-                <button
-                  type="button"
-                  class="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200">
-                  Lupa password?
-                </button>
               </div>
 
-              <!-- Login Button -->
               <button
                 type="submit"
                 :disabled="isLoading"
@@ -138,7 +115,6 @@
               </button>
             </form>
 
-            <!-- Divider -->
             <div class="mt-8 mb-6">
               <div class="relative">
                 <div class="absolute inset-0 flex items-center">
@@ -152,7 +128,6 @@
               </div>
             </div>
 
-            <!-- Additional Actions -->
             <div class="text-center space-y-4">
               <p class="text-sm text-gray-600">
                 Belum punya akun?
@@ -161,29 +136,21 @@
                   Hubungi Administrator
                 </button>
               </p>
-
-              <!-- Version Info -->
-              <div class="text-xs text-gray-400 pt-4 border-t border-gray-100">
-                <p>Absen Pro MAX v1.0</p>
-                <p>© 2024 - Sistem Absensi Modern</p>
-              </div>
             </div>
           </div>
         </div>
 
-        <!-- Additional Info Card -->
         <div
-          class="mt-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-200 p-6 text-center">
+          class="mt-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-200 p-5 text-center">
           <div
-            class="flex items-center justify-center space-x-4 text-sm text-gray-600">
-            <div class="flex items-center space-x-2">
-              <Icon name="lucide:shield-check" class="w-4 h-4 text-green-600" />
-              <span>Aman & Terpercaya</span>
+            class="flex items-center justify-center space-x-2 text-sm text-gray-600">
+            <div class="flex items-center">
+              <Icon name="lucide:shield" class="w-4 h-4 text-green-600" />
+              <span>Powered by Devaccto RPL</span>
             </div>
             <div class="w-1 h-4 bg-gray-300 rounded-full"></div>
-            <div class="flex items-center space-x-2">
-              <Icon name="lucide:clock" class="w-4 h-4 text-blue-600" />
-              <span>24/7 Available</span>
+            <div class="flex items-center">
+              <span>© 2024 - SMK Plus PNB</span>
             </div>
           </div>
         </div>
@@ -231,12 +198,13 @@ const handleLogin = async () => {
     if (data && data.token) {
       success.value = "Login berhasil! Mengalihkan...";
 
-      const token = useCookie("token");
-      token.value = data.token;
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       if (rememberMe.value) {
-        const credentials = useCookie("credentials");
-        credentials.value = { no_induk: no_induk.value };
+        localStorage.setItem("remember_no_induk", no_induk.value);
+      } else {
+        localStorage.removeItem("remember_no_induk");
       }
 
       setTimeout(() => {
@@ -255,9 +223,9 @@ const handleLogin = async () => {
 };
 
 onMounted(() => {
-  const credentials = useCookie("credentials");
-  if (credentials.value?.no_induk) {
-    no_induk.value = credentials.value.no_induk;
+  const savedNoInduk = localStorage.getItem("remember_no_induk");
+  if (savedNoInduk) {
+    no_induk.value = savedNoInduk;
     rememberMe.value = true;
   }
 });

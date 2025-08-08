@@ -93,8 +93,8 @@
 const isOpen = ref(false);
 
 const logout = () => {
-  useCookie("token").value = "";
-  navigateTo("/auth/login");
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
 };
 </script>
 
