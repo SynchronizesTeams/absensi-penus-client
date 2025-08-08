@@ -20,10 +20,13 @@
 
       <LocationStatus v-if="location" :location="location" />
 
-      <SubmitButton
+      <BaseButton
         v-if="photo && location"
         :is-submitting="isSubmitting"
-        @submit="handleSubmitAttendance" />
+        @submit="handleSubmitAttendance"
+        text="Kirim Absen"
+        iconName="lucide:check-circle"
+        loadingIconName="lucide:loader-2" />
     </div>
   </div>
 </template>
