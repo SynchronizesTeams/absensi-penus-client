@@ -22,7 +22,7 @@
                   name="lucide:alert-circle"
                   class="h-5 w-5 text-red-500 flex-shrink-0" />
                 <span class="text-sm font-medium text-red-700">{{
-                  error
+                  getErrorMessage()
                 }}</span>
               </div>
             </div>
@@ -104,15 +104,13 @@
                 </div>
               </div>
 
-              <button
-                type="submit"
-                :disabled="isLoading"
-                class="w-full px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl">
-                <Icon
-                  :name="isLoading ? 'lucide:loader-2' : 'lucide:log-in'"
-                  :class="['w-5 h-5', { 'animate-spin': isLoading }]" />
-                <span>{{ isLoading ? "Sedang Masuk..." : "Masuk" }}</span>
-              </button>
+              <BaseButton
+                :is-submitting="isLoading"
+                text="Masuk"
+                icon-name="lucide:log-in"
+                loading-icon-name="lucide:loader-2"
+                @submit="handleLogin"
+              />
             </form>
 
             <div class="mt-8 mb-6">
@@ -222,6 +220,16 @@ const handleLogin = async () => {
     isLoading.value = false;
   }
 };
+
+const getErrorMessage = () => {
+  if (!no_induk.value) {
+    return "Nomor Induk tidak boleh kosong";
+  }
+  if (!password.value) {
+    return "Password tidak boleh kosong";
+  }
+  return "";
+}
 
 onMounted(() => {
   const savedNoInduk = localStorage.getItem("remember_no_induk");

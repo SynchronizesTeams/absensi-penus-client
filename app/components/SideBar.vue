@@ -24,7 +24,7 @@
             class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
             <Icon name="lucide:calendar-check" class="w-5 h-5 text-white" />
           </div>
-          <h2 class="text-xl font-medium text-gray-800">Absen Pro MAX</h2>
+          <h2 class="text-xl font-medium text-gray-800">Trabsen</h2>
         </div>
         <button
           @click="isOpen = false"
@@ -42,7 +42,7 @@
             <div
               class="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors duration-200">
               <Icon
-                name="lucide:layout-dashboard"
+                name="lucide:home"
                 class="w-5 h-5 text-gray-600 group-hover:text-blue-700" />
             </div>
             <span class="ml-3 font-medium">Beranda</span>
@@ -58,6 +58,17 @@
                 class="w-5 h-5 text-gray-600 group-hover:text-blue-700" />
             </div>
             <span class="ml-3 font-medium">Absen</span>
+          </NuxtLink>
+          <NuxtLink
+            to="/tidakhadir"
+            class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group">
+            <div
+              class="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors duration-200">
+              <Icon
+                name="lucide:calendar-x"
+                class="w-5 h-5 text-gray-600 group-hover:text-blue-700" />
+            </div>
+            <span class="ml-3 font-medium">Tidak Hadir</span>
           </NuxtLink>
 
           <NuxtLink

@@ -41,6 +41,8 @@ function getTitle() {
       return 'Beranda'
     case '/absen':
       return 'Absen'
+    case '/tidakhadir':
+      return 'Lapor Izin/Sakit'
     case '/settings':
       return 'Pengaturan'
     default:
