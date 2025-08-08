@@ -131,10 +131,11 @@
             <div class="text-center space-y-4">
               <p class="text-sm text-gray-600">
                 Belum punya akun?
-                <button
+                <NuxtLink
+                  to="#"
                   class="text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200">
                   Hubungi Administrator
-                </button>
+                </NuxtLink>
               </p>
             </div>
           </div>
