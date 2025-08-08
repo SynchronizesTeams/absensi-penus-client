@@ -1,43 +1,192 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex flex-col">
+  <div
+    class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col">
     <div class="flex-grow flex items-center justify-center px-4 py-12">
-      <div class="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
-        <form @submit.prevent="handleLogin">
-          <div class="mb-4">
-            <label
-              for="no_induk"
-              class="block text-gray-700 text-sm font-medium mb-2"
-              >NIG</label
-            >
-            <input
-              type="text"
-              id="no_induk"
-              v-model="no_induk"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Masukkan Nomor Induk"
-              required />
+      <div class="max-w-md w-full">
+        <!-- Login Card -->
+        <div
+          class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+          <!-- Header Section -->
+          <div
+            class="bg-gradient-to-r from-blue-500 to-blue-600 p-8 text-center">
+            <div
+              class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+              <Icon name="lucide:user-check" class="w-10 h-10 text-white" />
+            </div>
+            <h1 class="text-2xl font-bold text-white mb-2">Absen Pro MAX</h1>
+            <p class="text-blue-100 text-sm">Sistem Absensi Modern</p>
           </div>
-          <div class="mb-6">
-            <label
-              for="password"
-              class="block text-gray-700 text-sm font-medium mb-2"
-              >Password</label
-            >
-            <input
-              type="password"
-              id="password"
-              v-model="password"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Masukkan Password"
-              required />
+
+          <!-- Form Section -->
+          <div class="p-8">
+            <div class="text-center mb-8">
+              <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                Selamat Datang
+              </h2>
+              <p class="text-gray-600">Masuk ke akun Anda untuk melanjutkan</p>
+            </div>
+
+            <!-- Error Message -->
+            <div
+              v-if="error"
+              class="bg-red-50 border-l-4 border-red-400 rounded-r-lg p-4 mb-6 shadow-sm">
+              <div class="flex items-center space-x-3">
+                <Icon
+                  name="lucide:alert-circle"
+                  class="h-5 w-5 text-red-500 flex-shrink-0" />
+                <span class="text-sm font-medium text-red-700">{{
+                  error
+                }}</span>
+              </div>
+            </div>
+
+            <!-- Success Message -->
+            <div
+              v-if="success"
+              class="bg-green-50 border-l-4 border-green-400 rounded-r-lg p-4 mb-6 shadow-sm">
+              <div class="flex items-center space-x-3">
+                <Icon
+                  name="lucide:check-circle"
+                  class="h-5 w-5 text-green-500 flex-shrink-0" />
+                <span class="text-sm font-medium text-green-700">{{
+                  success
+                }}</span>
+              </div>
+            </div>
+
+            <form @submit.prevent="handleLogin" class="space-y-6">
+              <!-- NIG Input -->
+              <div class="space-y-2">
+                <label
+                  for="no_induk"
+                  class="block text-gray-700 text-sm font-semibold">
+                  Nomor Induk Guru (NIG)
+                </label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Icon name="lucide:user" class="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    id="no_induk"
+                    v-model="no_induk"
+                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                    placeholder="Masukkan Nomor Induk"
+                    required />
+                </div>
+              </div>
+
+              <!-- Password Input -->
+              <div class="space-y-2">
+                <label
+                  for="password"
+                  class="block text-gray-700 text-sm font-semibold">
+                  Password
+                </label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Icon name="lucide:lock" class="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    :type="showPassword ? 'text' : 'password'"
+                    id="password"
+                    v-model="password"
+                    class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                    placeholder="Masukkan Password"
+                    required />
+                  <button
+                    type="button"
+                    @click="showPassword = !showPassword"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <Icon
+                      :name="showPassword ? 'lucide:eye-off' : 'lucide:eye'"
+                      class="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors duration-200" />
+                  </button>
+                </div>
+              </div>
+
+              <!-- Remember Me & Forgot Password -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <input
+                    id="remember-me"
+                    v-model="rememberMe"
+                    type="checkbox"
+                    class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                  <label for="remember-me" class="ml-2 text-sm text-gray-600">
+                    Ingat saya
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  class="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200">
+                  Lupa password?
+                </button>
+              </div>
+
+              <!-- Login Button -->
+              <button
+                type="submit"
+                :disabled="isLoading"
+                class="w-full px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl">
+                <Icon
+                  :name="isLoading ? 'lucide:loader-2' : 'lucide:log-in'"
+                  :class="['w-5 h-5', { 'animate-spin': isLoading }]" />
+                <span>{{ isLoading ? "Sedang Masuk..." : "Masuk" }}</span>
+              </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="mt-8 mb-6">
+              <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                  <div class="w-full border-t border-gray-200"></div>
+                </div>
+                <div class="relative flex justify-center text-xs uppercase">
+                  <span class="bg-white px-3 text-gray-500 font-medium"
+                    >Atau</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Actions -->
+            <div class="text-center space-y-4">
+              <p class="text-sm text-gray-600">
+                Belum punya akun?
+                <button
+                  class="text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200">
+                  Hubungi Administrator
+                </button>
+              </p>
+
+              <!-- Version Info -->
+              <div class="text-xs text-gray-400 pt-4 border-t border-gray-100">
+                <p>Absen Pro MAX v1.0</p>
+                <p>© 2024 - Sistem Absensi Modern</p>
+              </div>
+            </div>
           </div>
-          <button
-            type="submit"
-            class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            Masuk
-          </button>
-        </form>
+        </div>
+
+        <!-- Additional Info Card -->
+        <div
+          class="mt-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-200 p-6 text-center">
+          <div
+            class="flex items-center justify-center space-x-4 text-sm text-gray-600">
+            <div class="flex items-center space-x-2">
+              <Icon name="lucide:shield-check" class="w-4 h-4 text-green-600" />
+              <span>Aman & Terpercaya</span>
+            </div>
+            <div class="w-1 h-4 bg-gray-300 rounded-full"></div>
+            <div class="flex items-center space-x-2">
+              <Icon name="lucide:clock" class="w-4 h-4 text-blue-600" />
+              <span>24/7 Available</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -46,6 +195,11 @@
 <script lang="ts" setup>
 const no_induk = ref("");
 const password = ref("");
+const rememberMe = ref(false);
+const showPassword = ref(false);
+const isLoading = ref(false);
+const error = ref("");
+const success = ref("");
 const config = useRuntimeConfig();
 
 interface LoginResponse {
@@ -54,9 +208,11 @@ interface LoginResponse {
   message?: string;
 }
 
-console.log("API URL:", config.public.apiUrl);
-
 const handleLogin = async () => {
+  error.value = "";
+  success.value = "";
+  isLoading.value = true;
+
   try {
     const data: LoginResponse = await $fetch(
       `${config.public.apiUrl}/auth/login`,
@@ -73,13 +229,42 @@ const handleLogin = async () => {
     );
 
     if (data && data.token) {
-      useCookie("token").value = data.token;
-      navigateTo("/");
+      success.value = "Login berhasil! Mengalihkan...";
+
+      const token = useCookie("token");
+      token.value = data.token;
+
+      if (rememberMe.value) {
+        const credentials = useCookie("credentials");
+        credentials.value = { no_induk: no_induk.value };
+      }
+
+      setTimeout(() => {
+        navigateTo("/");
+      }, 1000);
     } else {
-      console.error("Login gagal:", data?.message || "Unknown error");
+      error.value =
+        data?.message || "Login gagal. Periksa kembali kredensial Anda.";
     }
-  } catch (error) {
-    console.error("Error:", error);
+  } catch (err: any) {
+    console.error("Error:", err);
+    error.value = err?.data?.message || "Terjadi kesalahan. Silakan coba lagi.";
+  } finally {
+    isLoading.value = false;
   }
 };
+
+onMounted(() => {
+  const credentials = useCookie("credentials");
+  if (credentials.value?.no_induk) {
+    no_induk.value = credentials.value.no_induk;
+    rememberMe.value = true;
+  }
+});
+
+watch([no_induk, password], () => {
+  if (error.value) {
+    error.value = "";
+  }
+});
 </script>
