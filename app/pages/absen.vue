@@ -18,38 +18,54 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue';
+
 const showStatus = ref(false);
 const status = ref<"success" | "error">("success");
 const statusMessage = ref("");
 const currentTime = ref(new Date());
+let timer: NodeJS.Timeout;
 
 definePageMeta({
   layout: 'main'
-})
+});
 
 onMounted(() => {
-  const timer = setInterval(() => {
+  timer = setInterval(() => {
     currentTime.value = new Date();
   }, 1000);
+});
 
-  onUnmounted(() => {
-    clearInterval(timer);
-  });
+onUnmounted(() => {
+  clearInterval(timer);
 });
 
 const handleSuccess = (msg = "") => {
   status.value = "success";
-  statusMessage.value = msg || "Data absen Anda telah berhasil dikirim pada";
+
+  if (msg === "offline") {
+    statusMessage.value = "✅ Absen berhasil disimpan offline! Data akan dikirim saat online.";
+  } else {
+    statusMessage.value = "✅ Data absen Anda telah berhasil dikirim pada";
+  }
+
   showStatus.value = true;
-  setTimeout(() => {
-    showStatus.value = false;
-  }, 3000);
+
+  // Hanya reset jika bukan offline
+  if (msg !== "offline") {
+    setTimeout(() => {
+      showStatus.value = false;
+    }, 3000);
+  }
 };
 
 const handleError = (msg = "") => {
   status.value = "error";
-  statusMessage.value = msg || "Data absen gagal dikirim. Silakan coba lagi.";
+  statusMessage.value = msg || "❌ Data absen gagal dikirim. Silakan coba lagi.";
   showStatus.value = true;
+  setTimeout(() => {
+    showStatus.value = false;
+  }, 3000);
 };
 
 const resetForm = () => {

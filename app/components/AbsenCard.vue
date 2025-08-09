@@ -27,11 +27,27 @@
         text="Kirim Absen"
         iconName="lucide:check-circle"
         loadingIconName="lucide:loader-2" />
+
+      <!-- Tombol sinkronisasi manual -->
+      <div v-if="offlineCount > 0" class="mt-4 text-center">
+        <button
+          @click="syncOfflineData"
+          :disabled="isSubmitting"
+          class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50">
+          <Icon name="lucide:refresh-cw" class="mr-2" />
+          Sinkronkan {{ offlineCount }} Absen Offline
+        </button>
+        <p class="text-xs text-gray-500 mt-2">
+          Data absen offline akan dikirim ke server
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
+
 const {
   photo,
   location,
@@ -39,9 +55,11 @@ const {
   isSubmitting,
   error,
   success,
+  offlineCount,
   getCurrentLocation,
   submitAttendance,
-  resetForm,
+  syncOfflineData,
+  initOfflineCount
 } = useAbsen();
 
 const AttendanceData = ref({
@@ -60,6 +78,7 @@ const handleCameraCapture = async () => {
   } catch (err) {
     error.value = err instanceof Error ? err.message : "Terjadi kesalahan";
     isCapturing.value = false;
+    emit("error", error.value);
   }
 };
 
@@ -84,13 +103,16 @@ const handleSubmitAttendance = async () => {
     AttendanceData.value.photo = photo.value;
     AttendanceData.value.location = location.value;
     await submitAttendance(AttendanceData.value);
+
+    // Jika offline, error akan ditangkap di catch block
     emit("success");
-    setTimeout(() => {
-      resetForm();
-    }, 3000);
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : "Terjadi kesalahan, silahkan coba lagi nanti";
-    emit("error", error.value);
+  } catch (err: any) {
+    if (err.message === 'offline') {
+      emit("success", "offline");
+    } else {
+      error.value = err instanceof Error ? err.message : "Terjadi kesalahan, silahkan coba lagi nanti";
+      emit("error", error.value);
+    }
   } finally {
     isSubmitting.value = false;
   }
@@ -99,6 +121,17 @@ const handleSubmitAttendance = async () => {
 const setPhoto = (value: File | null) => {
   photo.value = value;
 };
+
+// Sinkronkan otomatis saat online
+onMounted(async () => {
+  await initOfflineCount();
+
+  window.addEventListener('online', async () => {
+    if (offlineCount.value > 0) {
+      await syncOfflineData();
+    }
+  });
+});
 </script>
 
 <style scoped>

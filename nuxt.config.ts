@@ -56,6 +56,25 @@ export default defineNuxtConfig({
     workbox: {
       navigateFallback: "/",
       globPatterns: ["**/*.{js,css,html,woff2,json,png,svg}"],
+      importScripts: ['/sw.js'], // Load custom service worker
+      runtimeCaching: [
+        {
+          urlPattern: /\/api\/absen\/masuk/,
+          handler: 'NetworkOnly',
+          method: 'POST',
+        },
+        {
+          urlPattern: /.*/,
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'static-cache',
+            expiration: {
+              maxEntries: 100,
+              maxAgeSeconds: 60 * 60 * 24 * 7, // 7 hari
+            },
+          },
+        }
+      ]
     },
     devOptions: {
       enabled: true,
