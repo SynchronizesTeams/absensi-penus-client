@@ -10,7 +10,7 @@
     <span>{{ isSubmitting ? 'Loading...' : text }}</span>
   </button>
 </template>
-
+  
 <script setup lang="ts">
 interface Props {
   isSubmitting: boolean;
@@ -25,5 +25,3 @@ defineEmits<{
   submit: [];
 }>();
 </script>
-
-<style></style>

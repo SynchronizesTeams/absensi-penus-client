@@ -36,8 +36,15 @@ onMounted(() => {
   }, 1000);
 });
 
-onUnmounted(() => {
-  clearInterval(timer);
+  try {
+    navigator.geolocation.getCurrentPosition((pos) => console.log(pos));
+  } catch (error) {
+    console.error(error);
+  }
+
+  onUnmounted(() => {
+    clearInterval(timer);
+  });
 });
 
 const handleSuccess = (msg = "") => {
