@@ -24,13 +24,19 @@ const statusMessage = ref("");
 const currentTime = ref(new Date());
 
 definePageMeta({
-  layout: 'main'
-})
+  layout: "main",
+});
 
 onMounted(() => {
   const timer = setInterval(() => {
     currentTime.value = new Date();
   }, 1000);
+
+  try {
+    navigator.geolocation.getCurrentPosition((pos) => console.log(pos));
+  } catch (error) {
+    console.error(error);
+  }
 
   onUnmounted(() => {
     clearInterval(timer);

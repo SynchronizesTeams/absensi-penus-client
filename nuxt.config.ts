@@ -38,10 +38,10 @@ export default defineNuxtConfig({
   pwa: {
     registerType: "autoUpdate",
     manifest: {
-      name: "Sistem Absen Penus Wireless No Fake PWA Full Pro Max 5G+",
-      short_name: "Penus Absen",
+      name: "Trabsen",
+      short_name: "Trabsen",
       description: "Aplikasi Absensi Penus",
-      theme_color: "#fff",
+      theme_color: "#2b7fff",
       background_color: "#fff",
       display: "standalone",
       start_url: "/",
@@ -55,7 +55,7 @@ export default defineNuxtConfig({
     },
     workbox: {
       navigateFallback: "/",
-      globPatterns: ["**/*.{js,css,html,woff2,json,png,svg}"],
+      globPatterns: ["**/*.{js,css,html,json,png,svg}"],
     },
     devOptions: {
       enabled: true,

@@ -68,7 +68,7 @@ export const useAbsen = () => {
       const data = await $fetch(`${config.public.apiUrl}/absen/masuk`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${useCookie("token").value}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
           Accept: "application/json",
         },
         body: formData,
