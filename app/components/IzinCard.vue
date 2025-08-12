@@ -3,14 +3,51 @@
     class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
     <div class="p-8 pb-6">
       <h2 class="text-2xl font-medium text-center text-gray-800 mb-2">
-        Ambil Foto untuk Absen
+        Keterangan Tidak Hadir
       </h2>
       <p class="text-center text-gray-600 text-sm">
-        Pastikan wajah Anda terlihat jelas dalam foto
+        Lengkapi data berikut untuk mengajukan izin.
       </p>
     </div>
 
     <div class="px-8 pb-8 space-y-6">
+      <div>
+        <label
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Jenis Keterangan</label
+        >
+        <div class="flex items-center space-x-6">
+          <div v-for="r in radio" :key="r.id" class="flex items-center">
+            <input
+              :id="r.id"
+              :value="r.name"
+              name="keterangan"
+              type="radio"
+              v-model="selectedKeterangan"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600" />
+            <label
+              :for="r.id"
+              class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >{{ r.name }}</label
+            >
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label
+          for="keterangan_masuk"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Detail Keterangan</label
+        >
+        <textarea
+          id="keterangan_masuk"
+          rows="4"
+          v-model="keteranganMasuk"
+          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+          placeholder="Jelaskan alasan Anda tidak hadir"></textarea>
+      </div>
+
       <PhotoCard
         :photo="photo"
         :is-capturing="isCapturing"
@@ -18,44 +55,34 @@
         @retake-photo="() => setPhoto(null)"
         @file-change="handleFileChange" />
 
-
       <BaseButton
         v-if="photo"
         :is-submitting="isSubmitting"
-        @submit="handleSubmitAttendance"
-        text="Kirim Absen"
-        iconName="lucide:check-circle"
+        @submit="handleSubmit"
+        text="Kirim"
+        iconName="lucide:send"
         loadingIconName="lucide:loader-2" />
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-const {
-  photo,
-  isCapturing,
-  isSubmitting,
-  error,
-  submitAbsent,
-  resetForm,
-} = useAbsen();
+<script lang="ts" setup>
+const { photo, isCapturing, isSubmitting, error, submitAbsent } =
+  useAbsen();
 
-const AbsenData = ref({
-  photo: null as File | null,
-  keterangan: "",
-  keterangan_masuk: "",
-  timestamp: new Date(),
-});
+const selectedKeterangan = ref("Izin");
+const keteranganMasuk = ref("");
 
 const emit = defineEmits(["success", "error"]);
 
-const handleCameraCapture = async () => {
-  try {
-    isCapturing.value = true;
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : "Terjadi kesalahan";
-    isCapturing.value = false;
-  }
+const radio = [
+  { id: "radio-izin", name: "Izin" },
+  { id: "radio-sakit", name: "Sakit" },
+  { id: "radio-cuti", name: "Cuti" },
+];
+
+const handleCameraCapture = () => {
+  isCapturing.value = true;
 };
 
 const handleFileChange = (file: File) => {
@@ -65,10 +92,15 @@ const handleFileChange = (file: File) => {
   }
 };
 
-const handleSubmitAttendance = async () => {
-  if (!photo.value) {
-    error.value = "Foto dan lokasi diperlukan untuk absen";
-    emit("error", error.value);
+const setPhoto = (value: File | null) => {
+  photo.value = value;
+};
+
+const handleSubmit = async () => {
+  if (!photo.value || !keteranganMasuk.value) {
+    const errorMessage = "Harap lengkapi semua data (jenis, detail, dan foto).";
+    error.value = errorMessage;
+    emit("error", errorMessage);
     return;
   }
 
@@ -76,37 +108,23 @@ const handleSubmitAttendance = async () => {
   error.value = null;
 
   try {
-    AbsenData.value.photo = photo.value;
-    
-    AbsenData.value
-    await submitAbsent(AbsenData.value);
-    emit("success");
-    setTimeout(() => {
-      resetForm();
-    }, 3000);
+    const absentData = {
+      photo: photo.value,
+      keterangan: selectedKeterangan.value,
+      keterangan_masuk: keteranganMasuk.value,
+    };
+
+    await submitAbsent(absentData);
+    emit("success", "Pengajuan izin Anda telah berhasil dikirim.");
   } catch (err) {
-    error.value =
+    const errorMessage =
       err instanceof Error
         ? err.message
         : "Terjadi kesalahan, silahkan coba lagi nanti";
-    emit("error", error.value);
+    error.value = errorMessage;
+    emit("error", errorMessage);
   } finally {
     isSubmitting.value = false;
   }
 };
-
-const setPhoto = (value: File | null) => {
-  photo.value = value;
-};
 </script>
-
-<style scoped>
-.shadow-lg {
-  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.focus\:ring-2:focus {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-}
-</style>
