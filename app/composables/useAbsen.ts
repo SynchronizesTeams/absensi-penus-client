@@ -76,11 +76,7 @@ export const useAbsen = () => {
       return data;
     } catch (error: any) {
       let errorMsg = "Gagal mengirim data absensi.";
-      if (error?.response?._data?.message) {
-        errorMsg = error.response._data.message;
-      } else if (error?.data?.message) {
-        errorMsg = error.data.message;
-      } else if (error?.message) {
+      if (error?.message) {
         errorMsg = error.message;
       }
       console.log("Error submitting attendance:", errorMsg);
@@ -109,17 +105,17 @@ export const useAbsen = () => {
       return data;
     } catch (error: any) {
       let errorMsg = "Gagal mengirim data absensi.";
-      if (error?.response?._data?.message) {
-        errorMsg = error.response._data.message;
-      } else if (error?.data?.message) {
-        errorMsg = error.data.message;
-      } else if (error?.message) {
+      if (error?.message) {
         errorMsg = error.message;
       }
       console.log("Error submitting attendance:", errorMsg);
       throw new Error(errorMsg);
     }
   };
+
+  const submitPulang = () => {
+
+  }
 
   const resetForm = () => {
     photo.value = null;
