@@ -15,3 +15,9 @@ export interface AbsentData {
   keterangan: string
   keterangan_masuk: string
 }
+
+export interface ReturnData {
+  photo: File | null
+  location: LocationData
+  timestamp: Date
+}

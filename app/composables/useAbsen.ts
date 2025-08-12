@@ -1,4 +1,9 @@
-import type { AbsentData, AttendanceData, LocationData } from "~/types";
+import type {
+  AbsentData,
+  AttendanceData,
+  LocationData,
+  ReturnData,
+} from "~/types";
 
 export const useAbsen = () => {
   const photo = ref<File | null>(null);
@@ -113,9 +118,40 @@ export const useAbsen = () => {
     }
   };
 
-  const submitPulang = () => {
+  const submitPulang = async (returnData: ReturnData) => {
+    try {
+      if (!returnData.photo) {
+        throw new Error("Foto absensi tidak tersedia.");
+      }
+      const formData = new FormData();
+      formData.append("photo_izin", returnData.photo);
+      formData.append(
+        "latitude",
+        String(returnData.location?.latitude ?? "")
+      );
+      formData.append(
+        "longitude",
+        String(returnData.location?.longitude ?? "")
+      );
 
-  }
+      const data = await $fetch(`${config.public.apiUrl}/absen/izin`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json",
+        },
+        body: formData,
+      });
+      return data;
+    } catch (error: any) {
+      let errorMsg = "Gagal mengirim data absensi.";
+      if (error?.message) {
+        errorMsg = error.message;
+      }
+      console.log("Error submitting attendance:", errorMsg);
+      throw new Error(errorMsg);
+    }
+  };
 
   const resetForm = () => {
     photo.value = null;
