@@ -94,7 +94,7 @@ export const useAbsen = () => {
         throw new Error("Foto absensi tidak tersedia.");
       }
       const formData = new FormData();
-      formData.append("photo_masuk", absentData.photo);
+      formData.append("photo_izin", absentData.photo);
       formData.append("keterangan", absentData.keterangan);
       formData.append("keterangan_masuk", absentData.keterangan_masuk);
 
