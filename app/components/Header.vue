@@ -42,7 +42,7 @@ function getTitle() {
     case '/absen':
       return 'Absen'
     case '/tidakhadir':
-      return 'Lapor Izin/Sakit'
+      return 'Tidak Hadir'
     case '/settings':
       return 'Pengaturan'
     default:

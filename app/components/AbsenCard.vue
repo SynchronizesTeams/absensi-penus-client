@@ -38,7 +38,6 @@ const {
   isCapturing,
   isSubmitting,
   error,
-  success,
   getCurrentLocation,
   submitAttendance,
   resetForm,
@@ -89,7 +88,10 @@ const handleSubmitAttendance = async () => {
       resetForm();
     }, 3000);
   } catch (err) {
-    error.value = err instanceof Error ? err.message : "Terjadi kesalahan, silahkan coba lagi nanti";
+    error.value =
+      err instanceof Error
+        ? err.message
+        : "Terjadi kesalahan, silahkan coba lagi nanti";
     emit("error", error.value);
   } finally {
     isSubmitting.value = false;
