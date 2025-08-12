@@ -47,9 +47,6 @@ const handleSuccess = (msg = "") => {
   status.value = "success";
   statusMessage.value = msg || "Data absen Anda telah berhasil dikirim pada";
   showStatus.value = true;
-  setTimeout(() => {
-    showStatus.value = false;
-  }, 3000);
 };
 
 const handleError = (msg = "") => {

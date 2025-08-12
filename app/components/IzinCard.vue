@@ -18,10 +18,9 @@
         @retake-photo="() => setPhoto(null)"
         @file-change="handleFileChange" />
 
-      <LocationStatus v-if="location" :location="location" />
 
       <BaseButton
-        v-if="photo && location"
+        v-if="photo"
         :is-submitting="isSubmitting"
         @submit="handleSubmitAttendance"
         text="Kirim Absen"
@@ -34,18 +33,17 @@
 <script setup lang="ts">
 const {
   photo,
-  location,
   isCapturing,
   isSubmitting,
   error,
-  getCurrentLocation,
-  submitAttendance,
+  submitAbsent,
   resetForm,
 } = useAbsen();
 
-const AttendanceData = ref({
+const AbsenData = ref({
   photo: null as File | null,
-  location: null as { latitude: number; longitude: number } | null,
+  keterangan: "",
+  keterangan_masuk: "",
   timestamp: new Date(),
 });
 
@@ -53,8 +51,6 @@ const emit = defineEmits(["success", "error"]);
 
 const handleCameraCapture = async () => {
   try {
-    const locationData = await getCurrentLocation();
-    location.value = locationData;
     isCapturing.value = true;
   } catch (err) {
     error.value = err instanceof Error ? err.message : "Terjadi kesalahan";
@@ -70,7 +66,7 @@ const handleFileChange = (file: File) => {
 };
 
 const handleSubmitAttendance = async () => {
-  if (!photo.value || !location.value) {
+  if (!photo.value) {
     error.value = "Foto dan lokasi diperlukan untuk absen";
     emit("error", error.value);
     return;
@@ -80,9 +76,10 @@ const handleSubmitAttendance = async () => {
   error.value = null;
 
   try {
-    AttendanceData.value.photo = photo.value;
-    AttendanceData.value.location = location.value;
-    await submitAttendance(AttendanceData.value);
+    AbsenData.value.photo = photo.value;
+    
+    AbsenData.value
+    await submitAbsent(AbsenData.value);
     emit("success");
     setTimeout(() => {
       resetForm();

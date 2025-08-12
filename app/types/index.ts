@@ -9,3 +9,9 @@ export interface AttendanceData {
   location: LocationData | null
   timestamp: Date
 }
+
+export interface AbsentData {
+  photo: File | null
+  keterangan: string
+  keterangan_masuk: string
+}
