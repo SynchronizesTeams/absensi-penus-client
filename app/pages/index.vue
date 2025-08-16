@@ -69,10 +69,10 @@
         </div>
 
         <div class="divide-y divide-gray-100">
-          <div
-            v-for="activity in recentActivities"
+ <div
+ v-for="activity in recentActivities"
             :key="activity.id"
-            class="p-6 hover:bg-gray-50 transition-colors duration-200">
+ class="p-6 hover:bg-gray-50 transition-colors duration-200">
             <div class="flex items-center space-x-4">
               <div
                 class="w-12 h-12 rounded-full flex items-center justify-center shadow-sm bg-green-100">
@@ -82,10 +82,12 @@
               </div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between">
-                  <p class="font-medium text-gray-800">{{ activity.title }}</p>
-                  <span class="text-sm text-gray-500">{{ activity.time }}</span>
+ <p class="font-medium text-gray-800">Absensi {{ activity.status }}</p>
+ <span class="text-sm text-gray-500">{{
+ new Date(activity.created_at).toLocaleDateString()
+ }}</span>
                 </div>
-                <p class="text-sm text-gray-600 mt-1">
+                <p class="text-sm text-gray-600 mt-1 capitalize">
                   {{ activity.description }}
                 </p>
               </div>
@@ -130,29 +132,32 @@ const getGreeting = () => {
 }
 
 // Dummy data histori
-const recentActivities = ref([
-  {
-    id: 1,
-    type: "check-in",
-    title: "Check-in Berhasil",
-    description: "Absensi masuk pada 08:30 WIB",
-    time: "2 jam lalu",
-  },
-  {
-    id: 2,
-    type: "check-in",
-    title: "Check-in Berhasil",
-    description: "Absensi masuk pada 08:25 WIB",
-    time: "1 hari lalu",
-  },
-  {
-    id: 3,
-    type: "check-in",
-    title: "Check-in Berhasil",
-    description: "Absensi masuk pada 08:35 WIB",
-    time: "2 hari lalu",
-  },
-]);
+const recentActivities = ref([]);
+
+const fetchHistory = async () => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const BASE_URL = localStorage.getItem("BASE_URL");
+
+  if (!user.id || !BASE_URL) {
+    console.error("User ID or BASE_URL not found in local storage.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/api/log/user/${user.id}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    recentActivities.value = data.map((activity: any) => ({
+      ...activity,
+      description: `Absensi ${activity.status} pada ${activity.time}`,
+    }));
+  } catch (error) {
+    console.error("Error fetching history:", error);
+    // Optionally display an error message to the user
+  }
+};
 
 onMounted(() => {
   const lastCheckIn = localStorage.getItem("lastCheckIn");
@@ -166,6 +171,7 @@ onMounted(() => {
       timeZoneName: "short",
     });
   }
+  fetchHistory();
 });
 </script>
 
