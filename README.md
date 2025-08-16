@@ -37,7 +37,7 @@ Pastikan Anda memiliki [Node.js](https://nodejs.org/en/) (versi 18+) dan [pnpm](
 
 1.  **Clone repositori ini:**
     ```bash
-    git clone https://github.com/username/absensi-penus-client.git
+    git clone https://github.com/SynchronizesTeams/absensi-penus-client
     cd absensi-penus-client
     ```
 
