@@ -181,23 +181,22 @@ const fetchHistory = async () => {
       ...activity,
       description: `Absensi ${activity.status} pada ${activity.time}`,
     }));
+
+    const today = new Date().toDateString();
+    const hasCheckedInToday = data.some((activity: Activity) => {
+      return new Date(activity.created_at).toDateString() === today && (activity.status === 'masuk' || activity.status === 'pulang');
+    });
+
+    if (hasCheckedInToday) {
+      isCheckedIn.value = true;
+    }
+
   } catch (error) {
     console.error("Error fetching history:", error);
   }
 };
 
 onMounted(() => {
-  const lastCheckIn = localStorage.getItem("lastCheckIn");
-  const today = new Date().toDateString();
-
-  if (lastCheckIn && new Date(lastCheckIn).toDateString() === today) {
-    isCheckedIn.value = true;
-    lastCheckInTime.value = new Date(lastCheckIn).toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZoneName: "short",
-    });
-  }
   fetchHistory();
 });
 </script>
