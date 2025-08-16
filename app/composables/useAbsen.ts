@@ -1,9 +1,5 @@
-import type {
-  AbsentData,
-  AttendanceData,
-  LocationData,
-  ReturnData,
-} from "~/types";
+import { ref } from "vue";
+import type { AbsentData, AttendanceData, LocationData } from "~/types";
 
 export const useAbsen = () => {
   const photo = ref<File | null>(null);
@@ -81,10 +77,10 @@ export const useAbsen = () => {
       return data;
     } catch (error: any) {
       let errorMsg = "Gagal mengirim data absensi.";
-      if (error?.message) {
-        errorMsg = error.message;
+      if (error?.data?.message) {
+        errorMsg = error.data.message;
       }
-      console.log("Error submitting attendance:", errorMsg);
+      console.error("Error submitting attendance:", error);
       throw new Error(errorMsg);
     }
   };
@@ -110,31 +106,28 @@ export const useAbsen = () => {
       return data;
     } catch (error: any) {
       let errorMsg = "Gagal mengirim data absensi.";
-      if (error?.message) {
-        errorMsg = error.message;
+      if (error?.data?.message) {
+        errorMsg = error.data.message;
       }
-      console.log("Error submitting attendance:", errorMsg);
+      console.error("Error submitting absent data:", error);
       throw new Error(errorMsg);
     }
   };
 
-  const submitPulang = async (returnData: ReturnData) => {
+  const submitPulang = async (returnData: AttendanceData) => {
     try {
       if (!returnData.photo) {
         throw new Error("Foto absensi tidak tersedia.");
       }
       const formData = new FormData();
-      formData.append("photo_izin", returnData.photo);
-      formData.append(
-        "latitude",
-        String(returnData.location?.latitude ?? "")
-      );
+      formData.append("photo_pulang", returnData.photo);
+      formData.append("latitude", String(returnData.location?.latitude ?? ""));
       formData.append(
         "longitude",
         String(returnData.location?.longitude ?? "")
       );
 
-      const data = await $fetch(`${config.public.apiUrl}/absen/izin`, {
+      const data = await $fetch(`${config.public.apiUrl}/absen/pulang`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -145,11 +138,18 @@ export const useAbsen = () => {
       return data;
     } catch (error: any) {
       let errorMsg = "Gagal mengirim data absensi.";
-      if (error?.message) {
-        errorMsg = error.message;
+      if (error?.data?.message) {
+        errorMsg = error.data.message;
       }
-      console.log("Error submitting attendance:", errorMsg);
+      console.error("Error submitting return data:", error);
       throw new Error(errorMsg);
+    }
+  };
+
+  const setPhoto = (file: File | null) => {
+    photo.value = file;
+    if (!file) {
+      isCapturing.value = false;
     }
   };
 
@@ -158,6 +158,8 @@ export const useAbsen = () => {
     location.value = null;
     error.value = null;
     success.value = false;
+    isCapturing.value = false;
+    isSubmitting.value = false;
   };
 
   return {
@@ -170,6 +172,8 @@ export const useAbsen = () => {
     getCurrentLocation,
     submitAttendance,
     submitAbsent,
+    submitPulang,
     resetForm,
+    setPhoto,
   };
 };

@@ -1,9 +1,10 @@
 <template>
   <div
-    class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+    class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
+  >
     <div class="p-8 pb-6">
       <h2 class="text-2xl font-medium text-center text-gray-800 mb-2">
-        Ambil Foto untuk Absen
+        Ambil Foto untuk {{ headerText }}
       </h2>
       <p class="text-center text-gray-600 text-sm">
         Pastikan wajah Anda terlihat jelas dalam foto
@@ -16,22 +17,27 @@
         :is-capturing="isCapturing"
         @capture-photo="handleCameraCapture"
         @retake-photo="() => setPhoto(null)"
-        @file-change="handleFileChange" />
+        @file-change="handleFileChange"
+      />
 
       <LocationStatus v-if="location" :location="location" />
 
       <BaseButton
         v-if="photo && location"
         :is-submitting="isSubmitting"
-        @submit="handleSubmitAttendance"
-        text="Kirim Absen"
+        @submit="handleSubmit"
+        :text="buttonText"
         iconName="lucide:check-circle"
-        loadingIconName="lucide:loader-2" />
+        loadingIconName="lucide:loader-2"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from "vue";
+import { useAbsen } from "~/composables/useAbsen";
+
 const {
   photo,
   location,
@@ -40,7 +46,9 @@ const {
   error,
   getCurrentLocation,
   submitAttendance,
+  submitPulang,
   resetForm,
+  setPhoto,
 } = useAbsen();
 
 const AttendanceData = ref({
@@ -50,6 +58,16 @@ const AttendanceData = ref({
 });
 
 const emit = defineEmits(["success", "error"]);
+
+const isPulang = computed(() => new Date().getHours() >= 13);
+
+const buttonText = computed(() =>
+  isPulang.value ? "Kirim Absen Pulang" : "Kirim Absen Masuk"
+);
+
+const headerText = computed(() =>
+  isPulang.value ? "Absen Pulang" : "Absen Masuk"
+);
 
 const handleCameraCapture = async () => {
   try {
@@ -69,7 +87,15 @@ const handleFileChange = (file: File) => {
   }
 };
 
-const handleSubmitAttendance = async () => {
+const handleSubmit = async () => {
+  if (isPulang.value) {
+    await handleSubmitPulang();
+  } else {
+    await handleSubmitMasuk();
+  }
+};
+
+const handleSubmitMasuk = async () => {
   if (!photo.value || !location.value) {
     error.value = "Foto dan lokasi diperlukan untuk absen";
     emit("error", error.value);
@@ -98,8 +124,33 @@ const handleSubmitAttendance = async () => {
   }
 };
 
-const setPhoto = (value: File | null) => {
-  photo.value = value;
+const handleSubmitPulang = async () => {
+  if (!photo.value || !location.value) {
+    error.value = "Foto dan lokasi diperlukan untuk absen";
+    emit("error", error.value);
+    return;
+  }
+
+  isSubmitting.value = true;
+  error.value = null;
+
+  try {
+    AttendanceData.value.photo = photo.value;
+    AttendanceData.value.location = location.value;
+    await submitPulang(AttendanceData.value);
+    emit("success", "Absen pulang berhasil");
+    setTimeout(() => {
+      resetForm();
+    }, 3000);
+  } catch (err) {
+    error.value =
+      err instanceof Error
+        ? err.message
+        : "Terjadi kesalahan, silahkan coba lagi nanti";
+    emit("error", error.value);
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 </script>
 

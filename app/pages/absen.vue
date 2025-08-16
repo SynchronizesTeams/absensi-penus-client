@@ -5,7 +5,8 @@
       :status="status"
       :message="statusMessage"
       :current-time="currentTime"
-      @reset="resetForm" />
+      @reset="resetForm"
+    />
 
     <template v-else>
       <div class="p-4 space-y-4">
@@ -18,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
+
 const showStatus = ref(false);
 const status = ref<"success" | "error">("success");
 const statusMessage = ref("");
