@@ -1,6 +1,7 @@
 <template>
   <div
-    class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+    class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
+  >
     <div class="p-8 pb-6">
       <h2 class="text-2xl font-medium text-center text-gray-800 mb-2">
         Keterangan Tidak Hadir
@@ -24,7 +25,8 @@
               name="keterangan"
               type="radio"
               v-model="selectedKeterangan"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600" />
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
+            />
             <label
               :for="r.id"
               class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
@@ -44,8 +46,9 @@
           id="keterangan_masuk"
           rows="4"
           v-model="keteranganMasuk"
-          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-          placeholder="Jelaskan alasan Anda tidak hadir"></textarea>
+          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Jelaskan alasan Anda tidak hadir"
+        ></textarea>
       </div>
 
       <PhotoCard
@@ -53,7 +56,8 @@
         :is-capturing="isCapturing"
         @capture-photo="handleCameraCapture"
         @retake-photo="() => setPhoto(null)"
-        @file-change="handleFileChange" />
+        @file-change="handleFileChange"
+      />
 
       <BaseButton
         v-if="photo"
@@ -61,13 +65,17 @@
         @submit="handleSubmit"
         text="Kirim"
         iconName="lucide:send"
-        loadingIconName="lucide:loader-2" />
+        loadingIconName="lucide:loader-2"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-const { photo, isCapturing, isSubmitting, error, submitAbsent } =
+import { ref } from "vue";
+import { useAbsen } from "~/composables/useAbsen";
+
+const { photo, isCapturing, isSubmitting, error, submitAbsent, setPhoto } =
   useAbsen();
 
 const selectedKeterangan = ref("Izin");
@@ -90,10 +98,6 @@ const handleFileChange = (file: File) => {
     photo.value = file;
     isCapturing.value = false;
   }
-};
-
-const setPhoto = (value: File | null) => {
-  photo.value = value;
 };
 
 const handleSubmit = async () => {

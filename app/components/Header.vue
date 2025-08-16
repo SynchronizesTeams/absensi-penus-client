@@ -1,59 +1,74 @@
 <template>
   <div
-    class="flex items-center justify-between sticky top-0 z-30 px-4 py-4 bg-white shadow-lg border-b border-gray-100">
+    class="flex items-center justify-between sticky top-0 z-30 px-4 py-4 bg-white shadow-lg border-b border-gray-100"
+  >
     <div class="flex items-center space-x-2">
       <SideBar />
       <h1 class="text-xl font-bold text-gray-900">{{ getTitle() }}</h1>
     </div>
     <span
-      :class="['inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-        isOnline ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200']">
-      <span :class="['w-2 h-2 mr-1.5 rounded-full', isOnline ? 'bg-green-400' : 'bg-red-400']"></span>
-      {{ isOnline ? 'Online' : 'Offline' }}
+      :class="[
+        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+        isOnline
+          ? 'bg-green-100 text-green-800 border border-green-200'
+          : 'bg-red-100 text-red-800 border border-red-200',
+      ]"
+    >
+      <span
+        :class="[
+          'w-2 h-2 mr-1.5 rounded-full',
+          isOnline ? 'bg-green-400' : 'bg-red-400',
+        ]"
+      ></span>
+      {{ isOnline ? "Online" : "Offline" }}
     </span>
   </div>
 </template>
 
 <script lang="ts" setup>
-const isOnline = ref(navigator.onLine)
+import { ref, onMounted, onUnmounted } from "vue";
+import { useRoute } from "vue-router";
+
+const isOnline = ref(navigator.onLine);
 
 const updateOnlineStatus = () => {
-  isOnline.value = true
-}
+  isOnline.value = true;
+};
 const updateOfflineStatus = () => {
-  isOnline.value = false
-}
+  isOnline.value = false;
+};
 
 onMounted(() => {
-  window.addEventListener('online', updateOnlineStatus)
-  window.addEventListener('offline', updateOfflineStatus)
-})
+  window.addEventListener("online", updateOnlineStatus);
+  window.addEventListener("offline", updateOfflineStatus);
+});
 
 onUnmounted(() => {
-  window.removeEventListener('online', updateOnlineStatus)
-  window.removeEventListener('offline', updateOfflineStatus)
-})
+  window.removeEventListener("online", updateOnlineStatus);
+  window.removeEventListener("offline", updateOfflineStatus);
+});
 
 function getTitle() {
-  const path = useRoute().path
+  const path = useRoute().path;
   switch (path) {
-    case '/':
-      return 'Beranda'
-    case '/absen':
-      return 'Absen'
-    case '/tidakhadir':
-      return 'Tidak Hadir'
-    case '/settings':
-      return 'Pengaturan'
+    case "/":
+      return "Beranda";
+    case "/absen":
+      return "Absen";
+    case "/tidakhadir":
+      return "Tidak Hadir";
+    case "/settings":
+      return "Pengaturan";
     default:
-      return 'Unknown Page'
+      return "Unknown Page";
   }
 }
 </script>
 
 <style>
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

@@ -5,7 +5,8 @@
       :status="status"
       :message="statusMessage"
       :current-time="currentTime"
-      @reset="resetPage" />
+      @reset="resetPage"
+    />
 
     <template v-else>
       <div class="p-4 space-y-4">
@@ -17,6 +18,9 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, onMounted } from "vue";
+import { useAbsen } from "~/composables/useAbsen";
+
 definePageMeta({
   layout: "main",
 });
