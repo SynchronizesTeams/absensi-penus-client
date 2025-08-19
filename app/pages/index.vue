@@ -167,7 +167,7 @@ const fetchHistory = async () => {
   }
 
   try {
-    const response = await fetch(`${BASE_URL}/log/user/${user.user_id}`, {
+    const response = await fetch(`${BASE_URL}/v1/log/user/${user.user_id}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
