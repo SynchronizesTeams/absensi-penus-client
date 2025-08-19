@@ -127,7 +127,7 @@ export const useAbsen = () => {
         String(returnData.location?.longitude ?? "")
       );
 
-      const data = await $fetch(`${config.public.apiUrl}/absen/pulang`, {
+      const data = await $fetch(`${config.public.apiUrl}/v1/absen/pulang`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
