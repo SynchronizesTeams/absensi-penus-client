@@ -177,9 +177,12 @@ const fetchHistory = async () => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    recentActivities.value = data.map((activity: Activity) => ({
-      ...activity,
-      description: `Absensi ${activity.status} pada ${activity.time}`,
+    recentActivities.value = data.map((activity: any) => ({
+      id: activity.id,
+      status: activity.status,
+      created_at: activity.created_at,
+      time: activity.time,
+      description: `Absen ${activity.status} pada pukul ${activity.time}`
     }));
 
     const today = new Date().toDateString();
