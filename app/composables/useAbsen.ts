@@ -66,7 +66,7 @@ export const useAbsen = () => {
         String(attendanceData.location?.longitude ?? "")
       );
 
-      const data = await $fetch(`${config.public.apiUrl}/absen/masuk`, {
+      const data = await $fetch(`${config.public.apiUrl}/v2/absen/masuk`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
