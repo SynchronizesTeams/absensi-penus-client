@@ -122,10 +122,7 @@ export const useAbsen = () => {
       const formData = new FormData();
       formData.append("photo_pulang", returnData.photo);
       formData.append("latitude", String(returnData.location?.latitude ?? ""));
-      formData.append(
-        "longitude",
-        String(returnData.location?.longitude ?? "")
-      );
+      formData.append("longitude", String(returnData.location?.longitude ?? ""));
 
       const data = await $fetch(`${config.public.apiUrl}/v1/absen/pulang`, {
         method: "POST",
@@ -138,9 +135,13 @@ export const useAbsen = () => {
       return data;
     } catch (error: any) {
       let errorMsg = "Gagal mengirim data absensi.";
-      if (error?.data?.message) {
+
+      if (error?.statusCode === 403) {
+        errorMsg = "Anda sudah melakukan absen pulang hari ini.";
+      } else if (error?.data?.message) {
         errorMsg = error.data.message;
       }
+
       console.error("Error submitting return data:", error);
       throw new Error(errorMsg);
     }
