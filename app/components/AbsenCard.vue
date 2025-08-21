@@ -2,34 +2,45 @@
   <div
     class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
   >
-    <div class="p-8 pb-6">
-      <h2 class="text-2xl font-medium text-center text-gray-800 mb-2">
-        Ambil Foto untuk {{ headerText }}
+    <div v-if="hasSubmitted" class="p-8 pb-6 text-center">
+      <h2 class="text-2xl font-medium text-gray-800 mb-2">
+        Terima kasih telah melakukan {{ headerText }}
       </h2>
-      <p class="text-center text-gray-600 text-sm">
-        Pastikan wajah Anda terlihat jelas dalam foto
+      <p class="text-gray-600">
+        Anda sudah melakukan absen {{ isPulang ? 'pulang' : 'masuk' }} hari ini
       </p>
     </div>
 
-    <div class="px-8 pb-8 space-y-6">
-      <PhotoCard
-        :photo="photo"
-        :is-capturing="isCapturing"
-        @capture-photo="handleCameraCapture"
-        @retake-photo="() => setPhoto(null)"
-        @file-change="handleFileChange"
-      />
+    <div v-else>
+      <div class="p-8 pb-6">
+        <h2 class="text-2xl font-medium text-center text-gray-800 mb-2">
+          Ambil Foto untuk {{ headerText }}
+        </h2>
+        <p class="text-center text-gray-600 text-sm">
+          Pastikan wajah Anda terlihat jelas dalam foto
+        </p>
+      </div>
 
-      <LocationStatus v-if="location" :location="location" />
+      <div class="px-8 pb-8 space-y-6">
+        <PhotoCard
+          :photo="photo"
+          :is-capturing="isCapturing"
+          @capture-photo="handleCameraCapture"
+          @retake-photo="() => setPhoto(null)"
+          @file-change="handleFileChange"
+        />
 
-      <BaseButton
-        v-if="photo && location"
-        :is-submitting="isSubmitting"
-        @submit="handleSubmit"
-        :text="buttonText"
-        iconName="lucide:check-circle"
-        loadingIconName="lucide:loader-2"
-      />
+        <LocationStatus v-if="location" :location="location" />
+
+        <BaseButton
+          v-if="photo && location"
+          :is-submitting="isSubmitting"
+          @submit="handleSubmit"
+          :text="buttonText"
+          iconName="lucide:check-circle"
+          loadingIconName="lucide:loader-2"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -95,6 +106,8 @@ const handleSubmit = async () => {
   }
 };
 
+const hasSubmitted = ref(false);
+
 const handleSubmitMasuk = async () => {
   if (!photo.value || !location.value) {
     error.value = "Foto dan lokasi diperlukan untuk absen";
@@ -109,6 +122,7 @@ const handleSubmitMasuk = async () => {
     AttendanceData.value.photo = photo.value;
     AttendanceData.value.location = location.value;
     await submitAttendance(AttendanceData.value);
+    hasSubmitted.value = true;
     emit("success");
     setTimeout(() => {
       resetForm();
@@ -138,6 +152,7 @@ const handleSubmitPulang = async () => {
     AttendanceData.value.photo = photo.value;
     AttendanceData.value.location = location.value;
     await submitPulang(AttendanceData.value);
+    hasSubmitted.value = true;
     emit("success", "Absen pulang berhasil");
     setTimeout(() => {
       resetForm();
