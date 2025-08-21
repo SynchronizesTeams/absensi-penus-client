@@ -140,6 +140,7 @@ const isCheckedIn = ref(false);
 const lastCheckInTime = ref("08:30 WIB");
 const user = JSON.parse(localStorage.getItem("user") || "{}");
 const name = computed(() => user.name);
+const user_id = computed(() => user.user_id);
 
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -167,7 +168,7 @@ const fetchHistory = async () => {
   }
 
   try {
-    const response = await fetch(`${BASE_URL}/v1/log/user/${user.user_id}`, {
+    const response = await fetch(`${BASE_URL}/v1/log/user/${user_id.value}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
