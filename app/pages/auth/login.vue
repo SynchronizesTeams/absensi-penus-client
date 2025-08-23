@@ -195,6 +195,10 @@ interface LoginResponse {
   message?: string;
 }
 
+definePageMeta({
+  path: "/login"
+})
+
 const handleLogin = async () => {
   error.value = "";
   success.value = "";
