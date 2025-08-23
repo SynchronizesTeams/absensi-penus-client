@@ -18,7 +18,8 @@
         </p>
       </div>
 
-      <!-- Aktivitaas -->
+      <KehadiranCards />
+
       <History />
     </div>
   </div>
