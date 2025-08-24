@@ -24,22 +24,6 @@
         </div>
       </div>
     </div>
-
-    <div
-      class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 transform hover:scale-105 transition-all duration-200">
-      <div class="flex items-center space-x-4">
-        <div
-          class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
-          <Icon name="lucide:trending-up" class="w-7 h-7 text-white" />
-        </div>
-        <div>
-          <h3 class="text-2xl font-bold text-gray-800">
-            {{ attendanceRate }}%
-          </h3>
-          <p class="text-gray-600 font-medium">Tingkat Kehadiran</p>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
