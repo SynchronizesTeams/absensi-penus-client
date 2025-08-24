@@ -186,7 +186,7 @@ const handleLogin = async () => {
 
   try {
     const data: LoginResponse = await $fetch(
-      `${config.public.apiUrl}/api/auth/login`,
+      `${config.public.apiUrl}/auth/login`,
       {
         method: "POST",
         headers: {
