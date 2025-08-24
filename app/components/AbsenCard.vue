@@ -2,16 +2,16 @@
   <div
     class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
   >
-    <div v-if="hasSubmitted" class="p-8 pb-6 text-center">
+    <!-- <div v-if="hasSubmitted" class="p-8 pb-6 text-center">
       <h2 class="text-2xl font-medium text-gray-800 mb-2">
         Terima kasih telah melakukan {{ headerText }}
       </h2>
       <p class="text-gray-600">
         Anda sudah melakukan absen {{ isPulang ? 'pulang' : 'masuk' }} hari ini
       </p>
-    </div>
+    </div> -->
 
-    <div v-else>
+    <div>
       <div class="p-8 pb-6">
         <h2 class="text-2xl font-medium text-center text-gray-800 mb-2">
           Ambil Foto untuk {{ headerText }}
@@ -106,7 +106,7 @@ const handleSubmit = async () => {
   }
 };
 
-const hasSubmitted = ref(false);
+// const hasSubmitted = ref(false);
 
 const handleSubmitMasuk = async () => {
   if (!photo.value || !location.value) {
@@ -122,7 +122,7 @@ const handleSubmitMasuk = async () => {
     AttendanceData.value.photo = photo.value;
     AttendanceData.value.location = location.value;
     await submitAttendance(AttendanceData.value);
-    hasSubmitted.value = true;
+    // hasSubmitted.value = true;
     emit("success");
     setTimeout(() => {
       resetForm();
@@ -152,7 +152,7 @@ const handleSubmitPulang = async () => {
     AttendanceData.value.photo = photo.value;
     AttendanceData.value.location = location.value;
     await submitPulang(AttendanceData.value);
-    hasSubmitted.value = true;
+    // hasSubmitted.value = true;
     emit("success", "Absen pulang berhasil");
     setTimeout(() => {
       resetForm();
