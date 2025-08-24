@@ -59,6 +59,8 @@ function getTitle() {
       return "Tidak Hadir";
     case "/settings":
       return "Pengaturan";
+    case "/riwayat":
+      return "Riwayat";
     default:
       return "Unknown Page";
   }
