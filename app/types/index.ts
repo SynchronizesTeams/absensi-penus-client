@@ -32,3 +32,11 @@ export interface User {
   created_at: string;
   updated_at: string;
 }
+
+export interface Recap {
+  total_hadir: number | null;
+  total_izin: number | null;
+  total_sakit: number | null;
+  total_cuti: number | null;
+  total_tidak_hadir: number | null;
+}

@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-    <div class="container mx-auto px-4 py-8">
+  <div class="min-h-fit bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div class="mx-auto px-4 py-8">
       <div class="text-center mb-8">
         <div class="flex items-center justify-center mb-6">
           <div
@@ -20,7 +20,9 @@
 
       <KehadiranCards />
 
-      <History />
+      <div class="mt-20">
+        <Footer />
+      </div>
     </div>
   </div>
 </template>

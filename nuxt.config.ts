@@ -16,7 +16,7 @@ export default defineNuxtConfig({
 
     server: {
       allowedHosts: true,
-    }
+    },
   },
 
   icon: {
@@ -54,11 +54,17 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      navigateFallback: "/",
-      globPatterns: ["**/*.{js,css,html,png}"],
-      cleanupOutdatedCaches: true,
-      clientsClaim: true,
+      globPatterns: ["**/*.{js,css,html,png,svg,ico,json}"],
+      globDirectory: ".nuxt/dist/client/",
+      globIgnores: [
+        "**/node_modules/**/*",
+        "sw.js",
+        "workbox-*.js",
+        "**/*.map",
+      ],
+
       skipWaiting: true,
+      clientsClaim: true,
     },
     devOptions: {
       enabled: true,
