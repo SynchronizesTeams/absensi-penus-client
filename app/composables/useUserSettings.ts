@@ -5,7 +5,7 @@ export const useUserSettings = () => {
   const error = ref<string | null>(null);
   const success = ref<boolean>(false);
 
-  const updateProfile = async (userData: { name: string; email: string }) => {
+  const updateProfile = async (userData: { name: string; email: string; no_telpon?: string }) => {
     error.value = null;
     success.value = false;
     try {
@@ -19,11 +19,11 @@ export const useUserSettings = () => {
       const response = await $fetch(`${config.public.apiUrl}/v1/user/edit/${userId}`, {
         method: 'POST',
         headers: {
-        //   'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
-        //   Accept: "application/json",
+          Accept: "application/json",
         },
-        body: JSON.stringify(name,),
+        body: JSON.stringify(userData),
       });
       success.value = true;
       return response;
