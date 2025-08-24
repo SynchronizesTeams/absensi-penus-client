@@ -80,13 +80,13 @@ const { updateProfile, error, success } = useUserSettings();
 const formData = reactive({
   name: '',
   email: '',
-  no_telpon: '', 
+  no_telpon: '',
 });
 
 onMounted(() => {
   formData.name = localStorage.getItem('user_name') || '';
   formData.email = localStorage.getItem('user_email') || '';
-  formData.no_telpon = localStorage.getItem('user_phone') || ''; // Ambil dari localStorage jika ada
+  formData.no_telpon = localStorage.getItem('user_no_telpon') || '';
 });
 
 const isSubmitting = ref(false);
@@ -104,5 +104,4 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-/* Add any component-specific styles here */
 </style>

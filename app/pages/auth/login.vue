@@ -206,7 +206,8 @@ const handleLogin = async () => {
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("user_name", data.user.name);
       localStorage.setItem("user_email", data.user.email);
-      localStorage.setItem("user_id", data.user.user_id); // Tambahkan baris ini
+      localStorage.setItem("user_no_telpon", data.user.no_telpon?.toString() || 'Nomor telpon belum di atur');
+      localStorage.setItem("user_id", data.user.user_id);
 
       if (rememberMe.value) {
         localStorage.setItem("remember_no_induk", no_induk.value);

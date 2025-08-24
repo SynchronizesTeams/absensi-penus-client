@@ -48,10 +48,10 @@
         <span class="text-sm font-medium text-red-700">{{ error }}</span>
       </div>
     </div>
-    <div v-if="success" class="bg-green-50 border-l-4 border-green-400 rounded-r-lg p-4 mb-6 shadow-sm">
+    <div v-if="successMessage" class="bg-green-50 border-l-4 border-green-400 rounded-r-lg p-4 mb-6 shadow-sm">
       <div class="flex items-center space-x-3">
         <Icon name="lucide:check-circle" class="h-5 w-5 text-green-500 flex-shrink-0" />
-        <span class="text-sm font-medium text-green-700">{{ success }}</span>
+        <span class="text-sm font-medium text-green-700">{{ successMessage }}</span>
       </div>
     </div>
     <BaseButton
@@ -71,29 +71,34 @@ import { useUserSettings } from '@/composables/useUserSettings';
 const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
-const isLoading = ref(false); // Tambahkan state loading
+const isLoading = ref(false);
+const successMessage = ref<string | null>(null);
 
 const { updatePassword, error, success } = useUserSettings();
 
 const handleSubmit = async () => {
   if (newPassword.value !== confirmPassword.value) {
     error.value = 'Kata sandi baru dan konfirmasi kata sandi tidak cocok.';
-    success.value = false;
+    successMessage.value = null;
     return;
   }
 
-  isLoading.value = true; // Set loading menjadi true saat submit
+  isLoading.value = true;
   try {
-    await updatePassword({
+    const response = await updatePassword({
       password: newPassword.value,
     });
+    if (response) {
+      successMessage.value = response;
+      error.value = null;
+    }
   } catch (e) {
-    // Error handling sudah ada di composable, jadi tidak perlu di sini
+    successMessage.value = null;
   } finally {
-    isLoading.value = false; // Set loading menjadi false setelah selesai
+    isLoading.value = false;
   }
 
-  if (success.value) {
+  if (successMessage.value) {
     currentPassword.value = '';
     newPassword.value = '';
     confirmPassword.value = '';
@@ -102,5 +107,4 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-/* Tambahkan gaya khusus di sini jika diperlukan */
 </style>
