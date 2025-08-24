@@ -10,6 +10,50 @@ export const useAbsen = () => {
   const success = ref(false);
   const config = useRuntimeConfig();
 
+  const checkAbsenMasukStatus = async (): Promise<boolean> => {
+    try {
+      const userId = localStorage.getItem('user_id');
+      if (!userId) throw new Error('User ID not found.');
+
+      await $fetch(`${config.public.apiUrl}/v1/absen/cek-masuk/${userId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json",
+        },
+      });
+      return true; // 200 OK, user already absen masuk
+    } catch (error: any) {
+      if (error?.statusCode === 401) {
+        return false; // 401 Unauthorized, user not yet absen masuk
+      }
+      console.error("Error checking absen masuk status:", error);
+      throw new Error("Gagal memeriksa status absen masuk.");
+    }
+  };
+
+  const checkAbsenPulangStatus = async (): Promise<boolean> => {
+    try {
+      const userId = localStorage.getItem('user_id');
+      if (!userId) throw new Error('User ID not found.');
+
+      await $fetch(`${config.public.apiUrl}/v1/absen/cek-pulang/${userId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json",
+        },
+      });
+      return true; // 200 OK, user already absen pulang
+    } catch (error: any) {
+      if (error?.statusCode === 401) {
+        return false; // 401 Unauthorized, user not yet absen pulang
+      }
+      console.error("Error checking absen pulang status:", error);
+      throw new Error("Gagal memeriksa status absen pulang.");
+    }
+  };
+
   const getCurrentLocation = (): Promise<LocationData> => {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
@@ -176,5 +220,7 @@ export const useAbsen = () => {
     submitPulang,
     resetForm,
     setPhoto,
+    checkAbsenMasukStatus,
+    checkAbsenPulangStatus,
   };
 };
