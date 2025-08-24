@@ -16,7 +16,10 @@
             class="w-7 h-7 text-white" />
         </div>
         <div>
-          <p class="text-gray-600 font-medium">Absen Hari Ini</p>
+          <p class="text-gray-600 font-medium">
+            <span v-if="isCheckedIn">Terima kasih telah absen</span>
+            <span v-else >Tekan untuk absen</span>
+          </p>
           <h3 class="text-xl font-bold text-gray-800">
             <span v-if="isCheckedIn" class="text-green-500">✓ Sudah Absen</span>
             <span v-else class="text-yellow-500">Belum Absen</span>

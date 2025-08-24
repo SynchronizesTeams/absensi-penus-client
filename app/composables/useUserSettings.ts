@@ -5,30 +5,39 @@ export const useUserSettings = () => {
   const error = ref<string | null>(null);
   const success = ref<boolean>(false);
 
+  // helper untuk fetch dengan token
+  const authFetch = async (url: string, options: any = {}) => {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Token not found.');
+
+    return await $fetch(url, {
+      baseURL: config.public.apiUrl, // jadi semua relative ke sini
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        Accept: 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    });
+  };
+
   const updateProfile = async (userData: { name: string; email: string; no_telpon?: string }) => {
     error.value = null;
     success.value = false;
     try {
       const userId = localStorage.getItem('user_id');
-      const token = localStorage.getItem('token');
+      if (!userId) throw new Error('User ID not found.');
 
-      if (!userId || !token) {
-        throw new Error('User ID or token not found.');
-      }
-
-      const response = await $fetch(`${config.public.apiUrl}/v1/user/edit/${userId}`, {
+      const response = await authFetch(`/v1/user/edit/${userId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-          Accept: "application/json",
-        },
-        body: JSON.stringify(userData),
+        body: userData, // jangan pakai JSON.stringify
       });
+
       success.value = true;
       return response;
     } catch (e: any) {
-      error.value = e.data?.message || 'Failed to update profile.';
+      error.value = e.data?.message || e.message || 'Failed to update profile.';
       console.error('Error updating profile:', e);
       success.value = false;
       throw e;
@@ -40,24 +49,17 @@ export const useUserSettings = () => {
     success.value = false;
     try {
       const userId = localStorage.getItem('user_id');
-      const token = localStorage.getItem('token');
-      if (!userId || !token) {
-        throw new Error('User ID or token not found.');
-      }
+      if (!userId) throw new Error('User ID not found.');
 
-      const response = await $fetch(`${config.public.apiUrl}/v1/user/edit-password/${userId}`, {
+      const response = await authFetch(`/v1/user/edit-password/${userId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-          Accept: "application/json",
-        },
-        body: JSON.stringify(passwordData),
+        body: passwordData,
       });
+
       success.value = true;
       return response;
     } catch (e: any) {
-      error.value = e.data?.message || 'Failed to update password.';
+      error.value = e.data?.message || e.message || 'Failed to update password.';
       console.error('Error updating password:', e);
       success.value = false;
       throw e;
