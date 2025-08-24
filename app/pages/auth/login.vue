@@ -189,9 +189,21 @@ const error = ref("");
 const success = ref("");
 const config = useRuntimeConfig();
 
+interface UserData {
+  id: number;
+  user_id: string;
+  no_induk: string;
+  name: string;
+  email: string;
+  no_telpon: string | null;
+  role: string;
+  created_at: string;
+  updated_at: string;
+}
+
 interface LoginResponse {
   token: string;
-  user: object;
+  user: UserData;
   message?: string;
 }
 
@@ -206,7 +218,7 @@ const handleLogin = async () => {
 
   try {
     const data: LoginResponse = await $fetch(
-      `${config.public.apiUrl}/auth/login`,
+      `${config.public.apiUrl}/api/auth/login`,
       {
         method: "POST",
         headers: {
@@ -224,6 +236,9 @@ const handleLogin = async () => {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("user_name", data.user.name);
+      localStorage.setItem("user_email", data.user.email);
+      localStorage.setItem("user_id", data.user.user_id); // Tambahkan baris ini
 
       if (rememberMe.value) {
         localStorage.setItem("remember_no_induk", no_induk.value);
