@@ -22,10 +22,10 @@ export const useAbsen = () => {
           Accept: "application/json",
         },
       });
-      return true; // 200 OK, user already absen masuk
+      return true;
     } catch (error: any) {
       if (error?.statusCode === 401) {
-        return false; // 401 Unauthorized, user not yet absen masuk
+        return false;
       }
       console.error("Error checking absen masuk status:", error);
       throw new Error("Gagal memeriksa status absen masuk.");
