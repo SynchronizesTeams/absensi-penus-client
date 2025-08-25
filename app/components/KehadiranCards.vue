@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+  <div class=" gap-6 mb-8">
     <div
       class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 transform hover:scale-105 transition-all duration-200 cursor-pointer"
       @click="!isCheckedIn && navigateTo('/absen')">
@@ -31,8 +31,17 @@
 </template>
 
 <script lang="ts" setup>
+import { useAbsen } from '~/composables/useAbsen';
+
+const { checkAbsenMasukStatus, checkAbsenPulangStatus } = useAbsen();
 const attendanceRate = ref(90);
 const isCheckedIn = ref(false);
+const isCheckedOut = ref(false);
+
+onMounted(async () => {
+  isCheckedIn.value = await checkAbsenMasukStatus();
+  isCheckedOut.value = await checkAbsenPulangStatus();
+});
 </script>
 
 <style></style>
