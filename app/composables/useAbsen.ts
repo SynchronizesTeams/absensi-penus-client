@@ -115,6 +115,7 @@ export const useAbsen = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           Accept: "application/json",
+          // "Content-Type": "multipart/form-data",
         },
         body: formData,
       });
