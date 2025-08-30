@@ -115,7 +115,6 @@ export const useAbsen = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           Accept: "application/json",
-          // "Content-Type": "multipart/form-data",
         },
         body: formData,
       });
@@ -140,7 +139,7 @@ export const useAbsen = () => {
       formData.append("keterangan", absentData.keterangan);
       formData.append("keterangan_masuk", absentData.keterangan_masuk);
 
-      const data = await $fetch(`${config.public.apiUrl}/absen/izin`, {
+      const data = await $fetch(`${config.public.apiUrl}/v1/absen/izin`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
