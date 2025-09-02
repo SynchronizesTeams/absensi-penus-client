@@ -15,16 +15,10 @@ const { $pwa } = useNuxtApp();
 
 onMounted(() => {
   if ($pwa?.offlineReady) alert("Offline ready");
+  if (process.env.NODE_ENV === 'development') {
+    import('eruda').then((eruda: any) => {
+      eruda.init();
+    });
+  }
 });
-
-if (import.meta.client) {
-  const script = document.createElement("script");
-  script.src = "https://cdn.jsdelivr.net/npm/eruda";
-  script.onload = () => {
-    if (window.eruda) {
-      window.eruda.init();
-    }
-  };
-  document.body.appendChild(script);
-}
 </script>
