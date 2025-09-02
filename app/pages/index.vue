@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-fit bg-gradient-to-br from-blue-50 to-indigo-50">
+  <div class="min-h-screen relative bg-gradient-to-br from-blue-50 to-indigo-50">
     <div class="mx-auto px-4 py-8">
       <div class="text-center mb-8">
         <div class="flex items-center justify-center mb-6">
@@ -20,7 +20,7 @@
 
       <KehadiranCards />
 
-      <div class="mt-20">
+      <div class="mt-20 absolute bottom-0 left-0 right-0">
         <Footer />
       </div>
     </div>

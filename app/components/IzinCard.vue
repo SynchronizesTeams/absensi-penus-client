@@ -12,7 +12,7 @@
     </div>
 
     <div class="px-8 pb-8 space-y-6">
-      <div>
+      <div v-if="!hasSubmitted && !isAbsenToday">
         <label
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Jenis Keterangan</label
@@ -36,7 +36,7 @@
         </div>
       </div>
 
-      <div>
+      <div v-if="!hasSubmitted && !isAbsenToday">
         <label
           for="keterangan_masuk"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -52,6 +52,7 @@
       </div>
 
       <PhotoCard
+        v-if="!hasSubmitted && !isAbsenToday"
         :photo="photo"
         :is-capturing="isCapturing"
         @capture-photo="handleCameraCapture"
@@ -60,28 +61,44 @@
       />
 
       <BaseButton
-        v-if="photo"
+        v-if="photo && !hasSubmitted && !isAbsenToday"
         :is-submitting="isSubmitting"
         @submit="handleSubmit"
         text="Kirim"
         iconName="lucide:send"
         loadingIconName="lucide:loader-2"
       />
+
+      <div v-if="hasSubmitted" class="text-center text-green-600 font-semibold text-lg">
+        Pengajuan izin Anda telah berhasil dikirim.
+      </div>
+
+      <div v-if="isAbsenToday" class="text-center text-gray-600 font-semibold text-lg">
+        Anda sudah absen masuk atau pulang hari ini. Tidak dapat mengajukan izin.
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useAbsen } from "~/composables/useAbsen";
 
-const { photo, isCapturing, isSubmitting, error, submitAbsent, setPhoto } =
+const { photo, isCapturing, isSubmitting, error, submitAbsent, setPhoto, checkAbsenMasukStatus, checkAbsenPulangStatus } =
   useAbsen();
 
 const selectedKeterangan = ref("Izin");
 const keteranganMasuk = ref("");
+const hasSubmitted = ref(false);
+const isAbsenToday = ref(false);
 
 const emit = defineEmits(["success", "error"]);
+
+onMounted(async () => {
+  const checkedIn = await checkAbsenMasukStatus();
+  const checkedOut = await checkAbsenPulangStatus();
+  isAbsenToday.value = checkedIn || checkedOut;
+});
 
 const radio = [
   { id: "radio-izin", name: "Izin" },
@@ -119,6 +136,7 @@ const handleSubmit = async () => {
     };
 
     await submitAbsent(absentData);
+    hasSubmitted.value = true; // Set hasSubmitted to true on success
     emit("success", "Pengajuan izin Anda telah berhasil dikirim.");
   } catch (err) {
     const errorMessage =

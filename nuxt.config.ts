@@ -53,8 +53,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiUrl: "https://api-absensi.synchronizeteams.my.id/api",
-    },
+      apiUrl: "https://api-absensi.synchronizeteams.my.id/api"
+    }
   },
 
   modules: ["@nuxt/icon", "@vite-pwa/nuxt"],

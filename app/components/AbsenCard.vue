@@ -60,6 +60,8 @@ const {
   submitPulang,
   resetForm,
   setPhoto,
+  checkAbsenMasukStatus,
+  checkAbsenPulangStatus,
 } = useAbsen();
 
 const AttendanceData = ref({
@@ -107,6 +109,14 @@ const handleSubmit = async () => {
 };
 
 const hasSubmitted = ref(false);
+
+onMounted(async () => {
+  if (isPulang.value) {
+    hasSubmitted.value = await checkAbsenPulangStatus();
+  } else {
+    hasSubmitted.value = await checkAbsenMasukStatus();
+  }
+});
 
 const handleSubmitMasuk = async () => {
   if (!photo.value || !location.value) {

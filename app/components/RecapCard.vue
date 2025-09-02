@@ -70,7 +70,7 @@ const fetchRekap = async () => {
 
   try {
     const response = await fetch(
-      `${BASE_URL}/api/v1/absen/recap/${user_id.value}`,
+      `${BASE_URL}/v1/absen/recap/${user_id.value}`,
       {
         method: "GET",
         headers: {
