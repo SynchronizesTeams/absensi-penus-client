@@ -12,8 +12,8 @@ export const useAbsen = () => {
 
   const checkAbsenMasukStatus = async (): Promise<boolean> => {
     try {
-      const userId = localStorage.getItem('user_id');
-      if (!userId) throw new Error('User ID not found.');
+      const userId = localStorage.getItem("user_id");
+      if (!userId) throw new Error("User ID not found.");
 
       await $fetch(`${config.public.apiUrl}/v1/absen/cek-masuk/${userId}`, {
         method: "GET",
@@ -34,8 +34,8 @@ export const useAbsen = () => {
 
   const checkAbsenPulangStatus = async (): Promise<boolean> => {
     try {
-      const userId = localStorage.getItem('user_id');
-      if (!userId) throw new Error('User ID not found.');
+      const userId = localStorage.getItem("user_id");
+      if (!userId) throw new Error("User ID not found.");
 
       await $fetch(`${config.public.apiUrl}/v1/absen/cek-pulang/${userId}`, {
         method: "GET",
@@ -109,6 +109,7 @@ export const useAbsen = () => {
         "longitude",
         String(attendanceData.location?.longitude ?? "")
       );
+      formData.append("keterangan_pulang", attendanceData.keterangan_pulang);
 
       const data = await $fetch(`${config.public.apiUrl}/v2/absen/masuk`, {
         method: "POST",
@@ -166,7 +167,10 @@ export const useAbsen = () => {
       const formData = new FormData();
       formData.append("photo_pulang", returnData.photo);
       formData.append("latitude", String(returnData.location?.latitude ?? ""));
-      formData.append("longitude", String(returnData.location?.longitude ?? ""));
+      formData.append(
+        "longitude",
+        String(returnData.location?.longitude ?? "")
+      );
 
       const data = await $fetch(`${config.public.apiUrl}/v1/absen/pulang`, {
         method: "POST",

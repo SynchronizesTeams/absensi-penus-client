@@ -1,13 +1,12 @@
 <template>
   <div
-    class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
-  >
+    class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
     <div v-if="hasSubmitted" class="p-8 pb-6 text-center">
       <h2 class="text-2xl font-medium text-gray-800 mb-2">
         Terima kasih telah melakukan {{ headerText }}
       </h2>
       <p class="text-gray-600">
-        Anda sudah melakukan absen {{ isPulang ? 'pulang' : 'masuk' }} hari ini
+        Anda sudah melakukan absen {{ isPulang ? "pulang" : "masuk" }} hari ini
       </p>
     </div>
 
@@ -27,10 +26,20 @@
           :is-capturing="isCapturing"
           @capture-photo="handleCameraCapture"
           @retake-photo="() => setPhoto(null)"
-          @file-change="handleFileChange"
-        />
+          @file-change="handleFileChange" />
 
-        <LocationStatus v-if="location" :location="location" />
+        <textarea
+          v-model="AttendanceData.keterangan_masuk"
+          v-if="!isPulang"
+          rows="4"
+          placeholder="Keterangan masuk (opsional)"
+          class="block p-2.5 w-full mb-0 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
+        <textarea
+          v-model="AttendanceData.keterangan_pulang"
+          v-if="isPulang"
+          rows="4"
+          placeholder="Keterangan pulang (opsional)"
+          class="block p-2.5 w-full mb-0 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />\
 
         <BaseButton
           v-if="photo && location"
@@ -38,17 +47,15 @@
           @submit="handleSubmit"
           :text="buttonText"
           iconName="lucide:check-circle"
-          loadingIconName="lucide:loader-2"
-        />
+          loadingIconName="lucide:loader-2" />
+
+        <LocationStatus v-if="location" :location="location" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useAbsen } from "~/composables/useAbsen";
-
 const {
   photo,
   location,
@@ -68,6 +75,8 @@ const AttendanceData = ref({
   photo: null as File | null,
   location: null as { latitude: number; longitude: number } | null,
   timestamp: new Date(),
+  keterangan_masuk: "",
+  keterangan_pulang: "",
 });
 
 const emit = defineEmits(["success", "error"]);

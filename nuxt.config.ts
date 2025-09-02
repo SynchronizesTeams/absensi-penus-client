@@ -33,12 +33,6 @@ export default defineNuxtConfig({
     }
   },
 
-  // Optimasi experimental features
-  experimental: {
-    payloadExtraction: false, // Untuk static sites bisa dimatikan
-    viewTransition: true, // Smooth page transitions
-  },
-
   icon: {
     mode: "css",
     cssLayer: "base",

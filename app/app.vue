@@ -15,15 +15,8 @@ const { $pwa } = useNuxtApp();
 
 onMounted(() => {
   if ($pwa?.offlineReady) alert("Offline ready");
-});
-</script>
-<script setup lang="ts">
-const { $pwa } = useNuxtApp();
-
-onMounted(() => {
-  if ($pwa?.offlineReady) alert("Offline ready");
   if (process.env.NODE_ENV === 'development') {
-    import('eruda').then(eruda => {
+    import('eruda').then((eruda: any) => {
       eruda.init();
     });
   }

@@ -8,6 +8,8 @@ export interface AttendanceData {
   photo: File | null;
   location: LocationData | null;
   timestamp: Date;
+  keterangan_masuk: string;
+  keterangan_pulang: string;
 }
 
 export interface AbsentData {
