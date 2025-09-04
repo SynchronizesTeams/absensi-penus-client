@@ -39,7 +39,7 @@
           v-if="isPulang"
           rows="4"
           placeholder="Keterangan pulang (opsional)"
-          class="block p-2.5 w-full mb-0 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />\
+          class="block p-2.5 w-full mb-0 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
 
         <BaseButton
           v-if="photo && location"
