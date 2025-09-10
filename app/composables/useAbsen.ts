@@ -87,8 +87,8 @@ export const useAbsen = () => {
         },
         {
           enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 60000,
+          timeout: 25000,
+          maximumAge: 120000,
         }
       );
     });
