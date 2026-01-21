@@ -43,6 +43,7 @@ interface Props {
   status: "success" | "error";
   currentTime?: Date;
   message?: string;
+  keterangan?: string;
 }
 
 const props = defineProps<Props>();
@@ -59,9 +60,15 @@ const statusTextColor = computed(() =>
   props.status === "success" ? "text-green-700" : "text-red-700"
 );
 
-const statusTitle = computed(() =>
-  props.status === "success" ? "Absen Berhasil!" : "Absen Gagal"
-);
+const statusTitle = computed(() => {
+  if (props.status === "success") {
+    const keteranganText = props.keterangan
+      ? `Anda hadir ${props.keterangan}`
+      : "";
+    return `Absen Berhasil! ${keteranganText}`;
+  }
+  return "Absen Gagal";
+});
 
 const statusMessage = computed(
   () =>
