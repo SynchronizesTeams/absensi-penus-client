@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
   ssr: false,
-  
+
   nitro: {
     preset: "static",
     prerender: {
@@ -56,7 +56,7 @@ export default defineNuxtConfig({
   pwa: {
     registerType: "autoUpdate",
     strategies: "generateSW",
-    
+
     manifest: {
       name: "Trabsen",
       short_name: "Trabsen",
@@ -68,12 +68,12 @@ export default defineNuxtConfig({
       lang: "id",
       icons: [
         {
-          src: "/calend.png",
+          src: "/logo.png",
           sizes: "192x192",
           type: "image/png",
         },
         {
-          src: "/calend.png",
+          src: "/logo.png",
           sizes: "512x512",
           type: "image/png",
           purpose: "any maskable"
@@ -93,7 +93,7 @@ export default defineNuxtConfig({
       ],
       skipWaiting: true,
       clientsClaim: true,
-      
+
       // Caching strategies
       runtimeCaching: [
         {
