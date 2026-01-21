@@ -9,12 +9,21 @@
       </div>
       <div class="w-1 h-4 bg-gray-300 rounded-full"></div>
       <div class="flex items-center">
-        <span>© 2025 - SMK Plus PNB</span>
+        <span>© {{ currentYear }} - SMK Plus PNB</span>
+      </div>
+      <div class="w-1 h-4 bg-gray-300 rounded-full"></div>
+      <div class="flex items-center">
+        <span>Version {{ appVersion }}</span>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { computed } from "vue";
+
+const currentYear = computed(() => new Date().getFullYear());
+const appVersion = "1.0.0";
+</script>
 
 <style></style>
