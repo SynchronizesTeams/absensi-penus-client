@@ -47,7 +47,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiUrl: "https://api-absensi.smkpluspnb.sch.id"
+      apiUrl: "https://api-absensi.smkpluspnb.sch.id/api"
     }
   },
 
