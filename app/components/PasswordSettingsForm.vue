@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6">
+  <form @submit.prevent="handleSubmit" class="space-y-6 p-6">
     <div class="space-y-2">
       <label class="block text-gray-700 text-sm font-semibold">Kata Sandi Saat Ini</label>
       <div class="relative">
@@ -65,7 +65,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useUserSettings } from '@/composables/useUserSettings';
 
 const currentPassword = ref('');

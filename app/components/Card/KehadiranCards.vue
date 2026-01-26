@@ -19,20 +19,20 @@
         </div>
         <div>
           <p class="text-gray-600 font-medium">
-            <span v-if="isCheckedIn && currentHour < 13">Terima kasih telah absen</span>
-            <span v-else-if="isCheckedOut && currentHour >= 13">Terima kasih telah absen pulang</span>
-            <span v-else>Tekan untuk absen</span>
+            <span v-if="isCheckedIn && currentHour < 13">Terima kasih telah melakukan presensi</span>
+            <span v-else-if="isCheckedOut && currentHour >= 13">Terima kasih telah melakukan presensi pulang</span>
+            <span v-else>Tekan untuk melakukan presensi</span>
           </p>
           <h3 class="text-xl font-bold text-gray-800">
             <span
               v-if="isCheckedIn && currentHour < 13"
-              class="text-green-500">✓ Sudah Absen</span>
+              class="text-green-500">✓ Sudah Melakukan Presensi</span>
             <span
               v-else-if="isCheckedOut && currentHour >= 13"
-              class="text-green-500">✓ Sudah Absen Pulang</span>
+              class="text-green-500">✓ Sudah Melakukan Presensi Pulang</span>
             <span
               v-else
-              class="text-yellow-500">Belum Absen</span>
+              class="text-yellow-500">Belum Melakukan Presensi</span>
           </h3>
         </div>
       </div>

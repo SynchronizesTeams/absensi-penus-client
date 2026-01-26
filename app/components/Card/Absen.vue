@@ -6,7 +6,7 @@
         Terima kasih telah melakukan {{ headerText }}
       </h2>
       <p class="text-gray-600">
-        Anda sudah melakukan absen {{ isPulang ? "pulang" : "masuk" }} hari ini
+        Anda sudah melakukan presensi {{ isPulang ? "pulang" : "masuk" }} hari ini
       </p>
     </div>
 

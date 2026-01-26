@@ -14,11 +14,11 @@
           <span class="text-blue-600">Trabsen</span>
         </h1>
         <p class="text-gray-600 text-lg">
-          Sistem absensi online untuk staff dan guru
+          Sistem presensi online untuk staff dan guru
         </p>
       </div>
 
-      <KehadiranCards />
+      <CardKehadiranCards />
 
       <div class="mt-20 absolute bottom-0 left-0 right-0">
         <Footer />

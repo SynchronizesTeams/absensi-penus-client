@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-xl">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-xl">
       <h1 class="text-3xl font-extrabold text-gray-800 mb-6 text-center">Pengaturan Pengguna</h1>
 
       <div class="flex justify-center mb-6 space-x-3">

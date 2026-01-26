@@ -12,7 +12,7 @@
       <div class="p-4 space-y-4">
         <TimeCard :current-time="currentTime" />
         <template v-if="!hasAbsenMasuk || !hasAbsenPulang">
-          <AbsenCard @success="handleSuccess" @error="handleError" />
+          <CardAbsen @success="handleSuccess" @error="handleError" />
         </template>
         <template v-else>
           <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 text-center">

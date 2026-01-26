@@ -26,11 +26,11 @@ export default defineNuxtConfig({
       rollupOptions: {
         output: {
           manualChunks: {
-            vendor: ['vue', 'vue-router'],
-          }
-        }
-      }
-    }
+            vendor: ["vue", "vue-router"],
+          },
+        },
+      },
+    },
   },
 
   icon: {
@@ -47,11 +47,19 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiUrl: "https://api-absensi.smkpluspnb.sch.id/api"
-    }
+      apiUrl: "https://api-absensi.smkpluspnb.sch.id/api",
+    },
   },
 
-  modules: ["@nuxt/icon", "@vite-pwa/nuxt"],
+  modules: [
+    "@nuxt/icon",
+    "@vite-pwa/nuxt",
+    (_, nuxt) => {
+      nuxt.hook("pwa:beforeBuildServiceWorker", (options) => {
+        console.log("pwa:beforeBuildServiceWorker: ", options.base);
+      });
+    },
+  ],
 
   pwa: {
     registerType: "autoUpdate",
@@ -60,7 +68,7 @@ export default defineNuxtConfig({
     manifest: {
       name: "Trabsen",
       short_name: "Trabsen",
-      description: "Aplikasi Absensi Penus",
+      description: "Aplikasi Presensi Penus",
       theme_color: "#2b7fff",
       background_color: "#fff",
       display: "standalone",
@@ -76,9 +84,13 @@ export default defineNuxtConfig({
           src: "/logo.png",
           sizes: "512x512",
           type: "image/png",
-          purpose: "any maskable"
-        }
+          purpose: "any maskable",
+        },
       ],
+    },
+
+    client: {
+      installPrompt: true,
     },
 
     workbox: {
@@ -97,10 +109,11 @@ export default defineNuxtConfig({
       // Caching strategies
       runtimeCaching: [
         {
-          urlPattern: /^https:\/\/api-absensi\.synchronizeteams\.my\.id\/api\/.*/,
-          handler: 'StaleWhileRevalidate',
+          urlPattern:
+            /^https:\/\/api-absensi\.synchronizeteams\.my\.id\/api\/.*/,
+          handler: "StaleWhileRevalidate",
           options: {
-            cacheName: 'api-cache',
+            cacheName: "api-cache",
             expiration: {
               maxEntries: 50,
               maxAgeSeconds: 300, // 5 minutes
@@ -109,9 +122,9 @@ export default defineNuxtConfig({
         },
         {
           urlPattern: /\.(png|jpg|jpeg|svg|gif)$/,
-          handler: 'CacheFirst',
+          handler: "CacheFirst",
           options: {
-            cacheName: 'images',
+            cacheName: "images",
             expiration: {
               maxEntries: 100,
               maxAgeSeconds: 86400, // 1 day
@@ -123,7 +136,7 @@ export default defineNuxtConfig({
 
     devOptions: {
       enabled: false,
-      type: 'module'
+      type: "module",
     },
   },
 
@@ -134,17 +147,17 @@ export default defineNuxtConfig({
   router: {
     options: {
       hashMode: false,
-      scrollBehaviorType: 'auto'
-    }
+      scrollBehaviorType: "auto",
+    },
   },
 
   app: {
     head: {
       meta: [
-        { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'format-detection', content: 'telephone=no' }
-      ]
-    }
-  }
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "format-detection", content: "telephone=no" },
+      ],
+    },
+  },
 });

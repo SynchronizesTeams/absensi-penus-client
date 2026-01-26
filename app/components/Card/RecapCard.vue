@@ -8,7 +8,7 @@
           <Icon name="lucide:bar-chart-3" class="w-5 h-5 text-white" />
         </div>
         <h2 class="text-xl font-semibold text-gray-800">
-          Rekap Absensi Bulan Ini
+          Rekap Presensi Bulan Ini
         </h2>
       </div>
     </div>
