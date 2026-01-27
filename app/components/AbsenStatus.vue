@@ -65,17 +65,17 @@ const statusTitle = computed(() => {
     const keteranganText = props.keterangan
       ? `Anda hadir ${props.keterangan}`
       : "";
-    return `Absen Berhasil! ${keteranganText}`;
+    return `Presensi Berhasil! ${keteranganText}`;
   }
-  return "Absen Gagal";
+  return "Presensi Gagal";
 });
 
 const statusMessage = computed(
   () =>
     props.message ||
     (props.status === "success"
-      ? "Data absen Anda telah berhasil dikirim pada"
-      : "Data absen gagal dikirim. Silakan coba lagi.")
+      ? "Data presensi Anda telah berhasil dikirim pada"
+      : "Data presensi gagal dikirim. Silakan coba lagi.")
 );
 
 const formatTime = (date?: Date) => {
