@@ -24,3 +24,4 @@ logs
 !.env.example
 
 ecosystem.config.cjs
+pm2.config.cjs
