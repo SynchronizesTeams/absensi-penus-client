@@ -24,7 +24,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between">
               <p class="font-medium text-gray-800">
-                Absensi {{ activity.status }}
+                Presensi {{ activity.status }}
               </p>
               <span class="text-sm text-gray-500">{{
                 new Date(activity.created_at).toLocaleDateString()
@@ -44,12 +44,12 @@
       </p>
     </div>
 
-    <div v-if="recentActivities.length >= 4" class="p-6 bg-gray-50 text-center">
+    <!-- <div v-if="recentActivities.length >= 4" class="p-6 bg-gray-50 text-center">
       <button
         class="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors duration-200">
         Lihat Semua Aktivitas
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
