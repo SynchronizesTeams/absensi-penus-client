@@ -17,7 +17,10 @@
     "nuxt": "^4.0.1",
     "tailwindcss": "^4.1.11",
     "vue": "^3.5.18",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "workbox-core": "^7.4.0",
+    "workbox-precaching": "^7.4.0",
+    "workbox-routing": "^7.4.0"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.60",

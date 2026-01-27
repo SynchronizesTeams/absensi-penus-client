@@ -1,26 +1,26 @@
-// // <reference lib="WebWorker" />
-// // <reference types="vite/client" />
-// import { clientsClaim } from 'workbox-core'
-// import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching'
-// import { NavigationRoute, registerRoute } from 'workbox-routing'
+/// <reference lib="WebWorker" />
+/// <reference types="vite/client" />
+import { clientsClaim } from 'workbox-core'
+import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching'
+import { NavigationRoute, registerRoute } from 'workbox-routing'
 
-// declare let self: ServiceWorkerGlobalScope
+declare let self: ServiceWorkerGlobalScope
 
-// // self.__WB_MANIFEST is default injection point
-// precacheAndRoute(self.__WB_MANIFEST)
+// self.__WB_MANIFEST is default injection point
+precacheAndRoute(self.__WB_MANIFEST)
 
-// // clean old assets
-// cleanupOutdatedCaches()
+// clean old assets
+cleanupOutdatedCaches()
 
-// let allowlist: undefined | RegExp[]
-// if (import.meta.env.DEV)
-//   allowlist = [/^\/$/]
+let allowlist: undefined | RegExp[]
+if (import.meta.env.DEV)
+  allowlist = [/^\/$/]
 
-// // to allow work offline
-// registerRoute(new NavigationRoute(
-//   createHandlerBoundToURL('/'),
-//   { allowlist },
-// ))
+// to allow work offline
+registerRoute(new NavigationRoute(
+  createHandlerBoundToURL('/'),
+  { allowlist },
+))
 
-// self.skipWaiting()
-// clientsClaim()
+self.skipWaiting()
+clientsClaim()

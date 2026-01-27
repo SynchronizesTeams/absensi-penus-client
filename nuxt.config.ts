@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   ssr: false,
 
   nitro: {
-    preset: "static",
+    preset: "bun",
     prerender: {
       crawlLinks: true,
       failOnError: false,
