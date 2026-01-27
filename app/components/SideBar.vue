@@ -57,7 +57,7 @@
                 name="lucide:calendar"
                 class="w-5 h-5 text-gray-600 group-hover:text-blue-700" />
             </div>
-            <span class="ml-3 font-medium">Absen</span>
+            <span class="ml-3 font-medium">Presensi Hadir</span>
           </NuxtLink>
 
           <NuxtLink

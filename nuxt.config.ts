@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from "@tailwindcss/vite";
+import pkg from "./package.json";
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
@@ -94,6 +95,8 @@ export default defineNuxtConfig({
     },
 
     workbox: {
+      cacheId: `trabsen-v${pkg.version}`,
+      cleanupOutdatedCaches: true,
       // Optimasi caching strategy
       globPatterns: ["**/*.{js,css,html,png,svg,ico,json,woff2}"],
       globDirectory: ".nuxt/dist/client/",
@@ -113,10 +116,10 @@ export default defineNuxtConfig({
             /^https:\/\/api-absensi\.synchronizeteams\.my\.id\/api\/.*/,
           handler: "StaleWhileRevalidate",
           options: {
-            cacheName: "api-cache",
+            cacheName: `api-cache-v${pkg.version}`,
             expiration: {
               maxEntries: 50,
-              maxAgeSeconds: 300, // 5 minutes
+              maxAgeSeconds: 300,
             },
           },
         },
@@ -124,7 +127,7 @@ export default defineNuxtConfig({
           urlPattern: /\.(png|jpg|jpeg|svg|gif)$/,
           handler: "CacheFirst",
           options: {
-            cacheName: "images",
+            cacheName: `images-v${pkg.version}`,
             expiration: {
               maxEntries: 100,
               maxAgeSeconds: 86400, // 1 day

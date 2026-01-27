@@ -17,10 +17,10 @@
         <template v-else>
           <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 text-center">
             <h2 class="text-2xl font-medium text-gray-800 mb-2">
-              Terima kasih! Anda sudah melakukan absen hari ini.
+              Terima kasih! Anda sudah melakukan presensi hari ini.
             </h2>
             <p class="text-gray-600">
-              Anda sudah melakukan absen masuk dan absen pulang.
+              Anda sudah melakukan presensi masuk dan absen pulang.
             </p>
           </div>
         </template>
@@ -31,7 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useAbsen } from "~/composables/useAbsen";
 
 const { checkAbsenMasukStatus, checkAbsenPulangStatus } = useAbsen();

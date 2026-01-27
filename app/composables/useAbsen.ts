@@ -97,7 +97,7 @@ export const useAbsen = () => {
   const submitAttendance = async (attendanceData: AttendanceData) => {
     try {
       if (!attendanceData.photo) {
-        throw new Error("Foto absensi tidak tersedia.");
+        throw new Error("Foto presensi tidak tersedia.");
       }
       const formData = new FormData();
       formData.append("photo_masuk", attendanceData.photo);
@@ -121,7 +121,7 @@ export const useAbsen = () => {
       });
       return data;
     } catch (error: any) {
-      let errorMsg = "Gagal mengirim data absensi.";
+      let errorMsg = "Gagal mengirim data presensi.";
       if (error?.data?.message) {
         errorMsg = error.data.message;
       }
@@ -133,7 +133,7 @@ export const useAbsen = () => {
   const submitAbsent = async (absentData: AbsentData) => {
     try {
       if (!absentData.photo) {
-        throw new Error("Foto absensi tidak tersedia.");
+        throw new Error("Foto presensi tidak tersedia.");
       }
       const formData = new FormData();
       formData.append("photo_izin", absentData.photo);
@@ -150,7 +150,7 @@ export const useAbsen = () => {
       });
       return data;
     } catch (error: any) {
-      let errorMsg = "Gagal mengirim data absensi.";
+      let errorMsg = "Gagal mengirim data presensi.";
       if (error?.data?.message) {
         errorMsg = error.data.message;
       }
@@ -162,7 +162,7 @@ export const useAbsen = () => {
   const submitPulang = async (returnData: AttendanceData) => {
     try {
       if (!returnData.photo) {
-        throw new Error("Foto absensi tidak tersedia.");
+        throw new Error("Foto presensi tidak tersedia.");
       }
       const formData = new FormData();
       formData.append("photo_pulang", returnData.photo);
@@ -182,7 +182,7 @@ export const useAbsen = () => {
       });
       return data;
     } catch (error: any) {
-      let errorMsg = "Gagal mengirim data absensi.";
+      let errorMsg = "Gagal mengirim data presensi.";
 
       if (error?.statusCode === 403) {
         errorMsg = "Anda sudah melakukan absen pulang hari ini.";
