@@ -9,47 +9,52 @@ export const useAbsen = () => {
   const error = ref<string | null>(null);
   const success = ref(false);
   const config = useRuntimeConfig();
+  const getToken = () => localStorage.getItem("token");
+  const getUserId = () => localStorage.getItem("user_id");
+
+  const apiFetch = async <T>(url: string, options: any = {}): Promise<T> => {
+    const token = getToken();
+    return await $fetch<T>(url, {
+      ...options,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        ...options.headers,
+      },
+    });
+  };
+
+  const handleFetchError = (err: any, defaultMsg: string) => {
+    let errorMsg = defaultMsg;
+    if (err?.data?.message) {
+      errorMsg = err.data.message;
+    }
+    console.error(`Fetch error:`, err);
+    throw new Error(errorMsg);
+  };
 
   const checkAbsenMasukStatus = async (): Promise<boolean> => {
     try {
-      const userId = localStorage.getItem("user_id");
+      const userId = getUserId();
       if (!userId) throw new Error("User ID not found.");
 
-      await $fetch(`${config.public.apiUrl}/v1/absen/cek-masuk/${userId}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          Accept: "application/json",
-        },
-      });
+      await apiFetch(`${config.public.apiUrl}/v1/absen/cek-masuk/${userId}`);
       return true;
-    } catch (error: any) {
-      if (error?.statusCode === 401) {
-        return false;
-      }
-      console.error("Error checking absen masuk status:", error);
+    } catch (err: any) {
+      if (err?.statusCode === 401) return false;
       throw new Error("Gagal memeriksa status absen masuk.");
     }
   };
 
   const checkAbsenPulangStatus = async (): Promise<boolean> => {
     try {
-      const userId = localStorage.getItem("user_id");
+      const userId = getUserId();
       if (!userId) throw new Error("User ID not found.");
 
-      await $fetch(`${config.public.apiUrl}/v1/absen/cek-pulang/${userId}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          Accept: "application/json",
-        },
-      });
-      return true; // 200 OK, user already absen pulang
-    } catch (error: any) {
-      if (error?.statusCode === 401) {
-        return false; // 401 Unauthorized, user not yet absen pulang
-      }
-      console.error("Error checking absen pulang status:", error);
+      await apiFetch(`${config.public.apiUrl}/v1/absen/cek-pulang/${userId}`);
+      return true;
+    } catch (err: any) {
+      if (err?.statusCode === 401) return false;
       throw new Error("Gagal memeriksa status absen pulang.");
     }
   };
@@ -70,136 +75,69 @@ export const useAbsen = () => {
           });
         },
         (error) => {
-          let errorMessage = "Gagal mendapatkan lokasi";
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              errorMessage =
-                "Akses lokasi ditolak. Mohon izinkan akses lokasi.";
-              break;
-            case error.POSITION_UNAVAILABLE:
-              errorMessage = "Informasi lokasi tidak tersedia.";
-              break;
-            case error.TIMEOUT:
-              errorMessage = "Waktu permintaan lokasi habis.";
-              break;
-          }
-          reject(new Error(errorMessage));
+          const errorMessages = {
+            [error.PERMISSION_DENIED]: "Akses lokasi ditolak. Mohon izinkan akses lokasi.",
+            [error.POSITION_UNAVAILABLE]: "Informasi lokasi tidak tersedia.",
+            [error.TIMEOUT]: "Waktu permintaan lokasi habis.",
+          };
+          reject(new Error(errorMessages[error.code as keyof typeof errorMessages] || "Gagal mendapatkan lokasi"));
         },
-        {
-          enableHighAccuracy: true,
-          timeout: 25000,
-          maximumAge: 120000,
-        }
+        { enableHighAccuracy: true, timeout: 25000, maximumAge: 120000 }
       );
     });
   };
 
-  const submitAttendance = async (attendanceData: AttendanceData) => {
+  const performSubmission = async (endpoint: string, file: File, fileKey: string, payload: Record<string, any>) => {
     try {
-      if (!attendanceData.photo) {
-        throw new Error("Foto presensi tidak tersedia.");
-      }
       const formData = new FormData();
-      formData.append("photo_masuk", attendanceData.photo);
-      formData.append(
-        "latitude",
-        String(attendanceData.location?.latitude ?? "")
-      );
-      formData.append(
-        "longitude",
-        String(attendanceData.location?.longitude ?? "")
-      );
-      formData.append("keterangan_pulang", attendanceData.keterangan_pulang);
+      formData.append(fileKey, file);
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, String(value));
+        }
+      });
 
-      const data = await $fetch(`${config.public.apiUrl}/v2/absen/masuk`, {
+      return await apiFetch(`${config.public.apiUrl}${endpoint}`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          Accept: "application/json",
-        },
         body: formData,
       });
-      return data;
-    } catch (error: any) {
-      let errorMsg = "Gagal mengirim data presensi.";
-      if (error?.data?.message) {
-        errorMsg = error.data.message;
-      }
-      console.error("Error submitting attendance:", error);
-      throw new Error(errorMsg);
+    } catch (err: any) {
+      handleFetchError(err, "Gagal mengirim data presensi.");
     }
   };
 
-  const submitAbsent = async (absentData: AbsentData) => {
-    try {
-      if (!absentData.photo) {
-        throw new Error("Foto presensi tidak tersedia.");
-      }
-      const formData = new FormData();
-      formData.append("photo_izin", absentData.photo);
-      formData.append("keterangan", absentData.keterangan);
-      formData.append("keterangan_masuk", absentData.keterangan_masuk);
-
-      const data = await $fetch(`${config.public.apiUrl}/v1/absen/izin`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          Accept: "application/json",
-        },
-        body: formData,
-      });
-      return data;
-    } catch (error: any) {
-      let errorMsg = "Gagal mengirim data presensi.";
-      if (error?.data?.message) {
-        errorMsg = error.data.message;
-      }
-      console.error("Error submitting absent data:", error);
-      throw new Error(errorMsg);
-    }
+  const submitAttendance = async (data: AttendanceData) => {
+    if (!data.photo) throw new Error("Foto presensi tidak tersedia.");
+    return await performSubmission("/v2/absen/masuk", data.photo, "photo_masuk", {
+      latitude: data.location?.latitude,
+      longitude: data.location?.longitude,
+      keterangan_pulang: data.keterangan_pulang,
+    });
   };
 
-  const submitPulang = async (returnData: AttendanceData) => {
-    try {
-      if (!returnData.photo) {
-        throw new Error("Foto presensi tidak tersedia.");
-      }
-      const formData = new FormData();
-      formData.append("photo_pulang", returnData.photo);
-      formData.append("latitude", String(returnData.location?.latitude ?? ""));
-      formData.append(
-        "longitude",
-        String(returnData.location?.longitude ?? "")
-      );
+  const submitAbsent = async (data: AbsentData) => {
+    if (!data.photo) throw new Error("Foto presensi tidak tersedia.");
+    return await performSubmission("/v1/absen/izin", data.photo, "photo_izin", {
+      keterangan: data.keterangan,
+      keterangan_masuk: data.keterangan_masuk,
+    });
+  };
 
-      const data = await $fetch(`${config.public.apiUrl}/v1/absen/pulang`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          Accept: "application/json",
-        },
-        body: formData,
-      });
-      return data;
-    } catch (error: any) {
-      let errorMsg = "Gagal mengirim data presensi.";
-
-      if (error?.data?.message) {
-        errorMsg = error.data.message;
-      } else if (error?.statusCode === 403) {
-        errorMsg = "Anda sudah melakukan absen pulang hari ini.";
-      }
-
-      console.error("Error submitting return data:", error);
-      throw new Error(errorMsg);
-    }
+  const submitPulang = async (data: AttendanceData) => {
+    if (!data.photo) throw new Error("Foto presensi tidak tersedia.");
+    return await performSubmission("/v1/absen/pulang", data.photo, "photo_pulang", {
+      latitude: data.location?.latitude,
+      longitude: data.location?.longitude,
+    });
   };
 
   const setPhoto = (file: File | null) => {
-    photo.value = file;
-    if (!file) {
-      isCapturing.value = false;
+    if (file && !file.type.startsWith("image/")) {
+      error.value = "Tipe file tidak valid. Harap gunakan file gambar.";
+      return;
     }
+    photo.value = file;
+    if (!file) isCapturing.value = false;
   };
 
   const resetForm = () => {

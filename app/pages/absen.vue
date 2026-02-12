@@ -53,12 +53,6 @@ onMounted(async () => {
     currentTime.value = new Date();
   }, 1000);
 
-  try {
-    navigator.geolocation.getCurrentPosition((pos) => console.log(pos));
-  } catch (error) {
-    console.error(error);
-  }
-
   hasAbsenMasuk.value = await checkAbsenMasukStatus();
   hasAbsenPulang.value = await checkAbsenPulangStatus();
 

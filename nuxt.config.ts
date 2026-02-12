@@ -100,20 +100,14 @@ export default defineNuxtConfig({
       // Optimasi caching strategy
       globPatterns: ["**/*.{js,css,html,png,svg,ico,json,woff2}"],
       globDirectory: ".nuxt/dist/client/",
-      globIgnores: [
-        "**/node_modules/**/*",
-        "sw.js",
-        "workbox-*.js",
-        "**/*.map",
-      ],
+      globIgnores: ["**/node_modules/**/*", "sw.js", "workbox-*.js", "**/*.map"],
       skipWaiting: true,
       clientsClaim: true,
 
       // Caching strategies
       runtimeCaching: [
         {
-          urlPattern:
-            /^https:\/\/api-absensi\.synchronizeteams\.my\.id\/api\/.*/,
+          urlPattern: /^https:\/\/api-absensi\.smkpluspnb\.sch\.id\/api\/.*/,
           handler: "StaleWhileRevalidate",
           options: {
             cacheName: `api-cache-v${pkg.version}`,
