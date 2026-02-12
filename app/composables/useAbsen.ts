@@ -184,10 +184,10 @@ export const useAbsen = () => {
     } catch (error: any) {
       let errorMsg = "Gagal mengirim data presensi.";
 
-      if (error?.statusCode === 403) {
-        errorMsg = "Anda sudah melakukan absen pulang hari ini.";
-      } else if (error?.data?.message) {
+      if (error?.data?.message) {
         errorMsg = error.data.message;
+      } else if (error?.statusCode === 403) {
+        errorMsg = "Anda sudah melakukan absen pulang hari ini.";
       }
 
       console.error("Error submitting return data:", error);

@@ -70,6 +70,16 @@
       @change="handleFileChange"
       class="hidden"
     />
+
+    <div
+      v-if="isCompressing"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
+      <div class="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center space-y-4">
+        <Icon name="lucide:loader-2" class="w-10 h-10 text-blue-600 animate-spin" />
+        <p class="text-gray-700 font-medium">Memproses Foto...</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -86,6 +96,8 @@ const emit = defineEmits<{
   "file-change": [file: File];
 }>();
 
+const isCompressing = ref(false);
+
 const handleCameraClick = () => {
   emit("capture-photo");
   const input = document.getElementById(
@@ -96,16 +108,14 @@ const handleCameraClick = () => {
 
 const compressImage = async (file: File): Promise<File> => {
   return new Promise((resolve) => {
-    const reader = new FileReader();
     const img = new Image();
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    reader.onload = (e) => {
-      img.src = e.target?.result as string;
-    };
+    const objectUrl = URL.createObjectURL(file);
 
     img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
       const MAX_WIDTH = 1024;
       const MAX_HEIGHT = 1024;
       let width = img.width;
@@ -140,19 +150,28 @@ const compressImage = async (file: File): Promise<File> => {
       }, 'image/jpeg', 0.7);
     };
 
-    reader.readAsDataURL(file);
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(file);
+    };
+
+    img.src = objectUrl;
   });
 };
 
 const handleFileChange = async (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0];
   if (file) {
+    isCompressing.value = true;
     try {
       const compressedFile = await compressImage(file);
       emit("file-change", compressedFile);
     } catch (error) {
       console.error("Error compressing image:", error);
       emit("file-change", file);
+    } finally {
+      isCompressing.value = false;
+      (event.target as HTMLInputElement).value = '';
     }
   }
 };
